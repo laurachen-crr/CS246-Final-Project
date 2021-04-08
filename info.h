@@ -6,9 +6,10 @@ enum class Type { King, Queen, Rook, Knight, Bishop, Pawn };
 enum class Colour { Black, White };
 
 struct Info {
-    size_t row, col;
-    Colour colour;
+    int row;
+    int col;
     Type pieceName;
+    Colour colour;
 };
 
 #endif
