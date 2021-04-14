@@ -5,11 +5,12 @@
 class Cell {
     int r;
     int c;
-    Piece * curPiece = nullptr;
+    Piece* curPiece = nullptr;
 
 public:
     Cell(int r, int c);
-    void setPiece(Piece *mypiece); // Place a piece of given colour here.
+    void setPiece(Piece *mypiece); // set mypiece on the cell
+    void removePiece(); // remove the current piece
 };
 
 #endif

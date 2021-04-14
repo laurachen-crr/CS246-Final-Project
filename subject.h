@@ -2,25 +2,21 @@
 #define SUBJECT_H
 #include <vector>
 
-template <typename InfoType, typename StateType>
 class Observer;
 
-template <typename InfoType, typename StateType>
 class Subject {
-    std::vector<Observer<InfoType, StateType> *> observers;
+    std::vector<Observer *> observers;
 
 public:
-    void attach(Observer<InfoType, StateType> *o);
+    void attach(Observer *o);
     void notifyObservers();
 };
 
-template <typename InfoType, typename StateType>
-void Subject<InfoType, StateType>::attach(Observer<InfoType, StateType> *o) {
+void Subject::attach(Observer *o) {
     observers.emplace_back(o);
 }
 
-template <typename InfoType, typename StateType>
-void Subject<InfoType, StateType>::notifyObservers() {
+void Subject::notifyObservers() {
     for (auto &ob : observers)
         ob->notify(*this);
 }

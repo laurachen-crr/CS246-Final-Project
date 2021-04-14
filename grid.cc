@@ -6,33 +6,32 @@ Grid::Grid() {
         this->grid.at(i).resize(8);
     }
     
-    this->blackpawn.resize(8);
-    this->whitepawn.resize(8);
-    this->black.resize(8);
-    this->whitepawn.resize(8);
-    for(int i = 0; i < 8; ++i) {
-        Info curinfo = { 1, i, Type::Pawn, Colour::Black};
-        this->blackpawn.emplace_back(Piece(curinfo));
-        curinfo = {6, i, Type::Pawn, Colour::White};
-        this->whitepawn.emplace_back(Piece(curinfo));
-    }
-    this->black.emplace_back(Piece({0, 0, Type::Rook, Colour::Black}));
-    this->black.emplace_back(Piece({0, 1, Type::Knight, Colour::Black}));
-    this->black.emplace_back(Piece({0, 2, Type::Bishop, Colour::Black}));
-    this->black.emplace_back(Piece({0, 3, Type::King, Colour::Black}));
-    this->black.emplace_back(Piece({0, 4, Type::Queen, Colour::Black}));
-    this->black.emplace_back(Piece({0, 5, Type::Bishop, Colour::Black}));
-    this->black.emplace_back(Piece({0, 6, Type::Knight, Colour::Black}));
-    this->black.emplace_back(Piece({0, 7, Type::Rook, Colour::Black}));
+    this->black.resize(16);
+    this->white.resize(16);
 
-    this->black.emplace_back(Piece({7, 0, Type::Rook, Colour::White}));
-    this->black.emplace_back(Piece({7, 1, Type::Knight, Colour::White}));
-    this->black.emplace_back(Piece({7, 2, Type::Bishop, Colour::White}));
-    this->black.emplace_back(Piece({7, 3, Type::King, Colour::White}));
-    this->black.emplace_back(Piece({7, 4, Type::Queen, Colour::White}));
-    this->black.emplace_back(Piece({7, 5, Type::Bishop, Colour::White}));
-    this->black.emplace_back(Piece({7, 6, Type::Knight, Colour::White}));
-    this->black.emplace_back(Piece({7, 7, Type::Rook, Colour::White}));
+    for(int i = 0; i < 8; ++i) {
+        this->white.emplace_back(new Pawn({1, i, Colour::White}));
+        this->black.emplace_back(new Pawn({6, i, Colour::Black}));
+    }
+    this->black.emplace_back(new Rook({7, 0, Colour::Black}));
+    this->black.emplace_back(new Knight({7, 1, Colour::Black}));
+    this->black.emplace_back(new Bishop({7, 2, Colour::Black}));
+    this->black.emplace_back(new King({7, 3, Colour::Black}));
+    this->black.emplace_back(new Queen({7, 4, Colour::Black}));
+    this->black.emplace_back(new Bishop({7, 5, Colour::Black}));
+    this->black.emplace_back(new Knight({7, 6, Colour::Black}));
+    this->black.emplace_back(new Rook({7, 7, Colour::Black}));
+
+    this->white.emplace_back(new Rook({0, 0, Colour::White}));
+    this->white.emplace_back(new Knight({0, 1, Colour::White}));
+    this->white.emplace_back(new Bishop({0, 2, Colour::White}));
+    this->white.emplace_back(new King({0, 3, Colour::White}));
+    this->white.emplace_back(new Queen({0, 4, Colour::White}));
+    this->white.emplace_back(new Bishop({0, 5, Colour::White}));
+    this->white.emplace_back(new Knight({0, 6, Colour::White}));
+    this->white.emplace_back(new Rook({0, 7, Colour::White}));
+
+    this->td = TextDisplay{};
 }
 
 
@@ -45,15 +44,22 @@ void Grid::init() {
 
     // init all the pieces
     for(int i = 0; i < 8; ++i) {
-        this->grid.at(0).at(i).setPiece(&this->black.at(i));
-        this->grid.at(1).at(i).setPiece(&this->blackpawn.at(i));
-        this->grid.at(6).at(i).setPiece(&this->white.at(i));
-        this->grid.at(7).at(i).setPiece(&this->whitepawn.at(i));
+        this->grid.at(0).at(i).setPiece(this->black.at(i+8));
+        this->grid.at(1).at(i).setPiece(this->black.at(i));
+        this->grid.at(6).at(i).setPiece(this->white.at(i));
+        this->grid.at(7).at(i).setPiece(this->white.at(i+8));
+    }
+    
+    // attach observers(all pieces) to the grid
+    for(int i = 0; i < 16; ++i) {
+        this->attach(this->black.at(i));
+        this->attach(this->black.at(i));
     }
 
-    for(int i = 0; i < 8; ++i) {
-        this->grid.attach(&this->blackpawn.at(i));
-        this->grid.attach(&this->black.at(i));
+    // attach grid to pieces as observer
+    for(int i = 0; i < 16; ++i) {
+        this->black.at(i)->attach(this);
+        this->white.at(i)->attach(this);
     }
 }
 

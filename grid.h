@@ -3,33 +3,32 @@
 #include <iostream>
 #include <vector>
 #include "piece.h"
-#include "info.h"
-#include "state.h"
 #include "cell.h"
 #include "subject.h"
 #include "textdisplay.h"
 
+enum class Result { WhiteWin, BlackWin, Draw };
 class TextDisplay;
-template <typename InfoType, typename StateType> class Observer;
 class InvalidMove {};
 
-class Grid : public Subject<Info, State>, public Observer<Info, State> {
+class Grid : public Subject, public Observer {
     std::vector<std::vector<Cell>> grid; 
-    std::vector<Piece> blackpawn;
-    std::vector<Piece> whitepawn;
-    std::vector<Piece> black;
-    std::vector<Piece> white;
+    std::vector<Piece *> black;
+    std::vector<Piece *> white;
 
-    TextDisplay *td = nullptr; // The text display.
-    Observer<Info, State> *ob = nullptr; // Another observer (intent:  graphics)
+    TextDisplay td; // The text display.
+    // GraphDisplay *gd = nullptr; // Another observer (intent:  graphics)
+    void setObserver(Observer *ob);
 
 public:
     Grid();
     ~Grid();
     void init();
-    void setObserver(Observer<Info, State> *ob);
-    // notify all the pieces on the grid
-    void notify(Subject<Info, State> & lastMove) override;
+    void move(char pieceName, int r, int c); // move pieceName to r, c
+    bool check(); // check whether one side is checked
+    Result checkmate(); // check whether the game is over
+    void notify(Subject& lastMove) override;
+
 };
 
 #endif
