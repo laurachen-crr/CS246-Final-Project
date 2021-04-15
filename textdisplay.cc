@@ -2,24 +2,19 @@
 
 std::ostream &operator<<(std::ostream &out, const TextDisplay &td) {
     for (int i = 7; i >= 0; --i) {
-        cout << i + 1 << " ";
-        for (int j = 0; i < 8; ++j) {
-            cout << td.theDisplay.at(i).at(j);
+        std::cout << i + 1 << " ";
+        for (int j = 0; j < 8; ++j) {
+            std::cout << td.theDisplay.at(i).at(j);
         }
-        cout << endl;
+        std::cout << std::endl;
     }
-    cout << "abcdefgh" << endl;
+    std::cout << "  abcdefgh" << endl;
     return out;
 }
 
 TextDisplay::TextDisplay() {
     this->theDisplay.resize(8);
-    for (int i = 0; i < 8; ++i) {
-        this->theDisplay.at(i).resize(8);
-    }
-}
-
-void TextDisplay::init() {
+    
     this->theDisplay.at(0).emplace_back('R');
     this->theDisplay.at(0).emplace_back('N');
     this->theDisplay.at(0).emplace_back('B');
@@ -44,20 +39,23 @@ void TextDisplay::init() {
     }
 
     for(int i = 0; i < 4; ++i) {
-        this->theDisplay.at(3).emplace_back('-');
-        this->theDisplay.at(3).emplace_back(' ');
-        this->theDisplay.at(4).emplace_back(' ');
+        this->theDisplay.at(2).emplace_back('-');
+        this->theDisplay.at(2).emplace_back(' ');
         this->theDisplay.at(4).emplace_back('-');
+        this->theDisplay.at(4).emplace_back(' ');
+        this->theDisplay.at(3).emplace_back(' ');
+        this->theDisplay.at(3).emplace_back('-');
+        this->theDisplay.at(5).emplace_back(' ');
+        this->theDisplay.at(5).emplace_back('-');
     }
 
-    this->theDisplay.at(5) = this->theDisplay.at(3);
-    this->theDisplay.at(6) = this->theDisplay.at(4);
 }
+
 
 void TextDisplay::notify(Subject &board) {
 
 }
 
 TextDisplay::~TextDisplay() {
-    
+
 }

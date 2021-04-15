@@ -5,7 +5,7 @@
 #include <iostream>
 
 int main() {
-    Grid g;
+    Grid g{};
     g.init();
     std::cout << g;
 }

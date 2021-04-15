@@ -1,13 +1,11 @@
 #include "grid.h"
 
 Grid::Grid() {
-    this->black.resize(16);
-    this->white.resize(16);
-
     for(int i = 0; i < 8; ++i) {
         this->white.emplace_back(new Pawn({1, i, Colour::White}));
         this->black.emplace_back(new Pawn({6, i, Colour::Black}));
     }
+
     this->black.emplace_back(new Rook({7, 0, Colour::Black}));
     this->black.emplace_back(new Knight({7, 1, Colour::Black}));
     this->black.emplace_back(new Bishop({7, 2, Colour::Black}));
@@ -26,7 +24,7 @@ Grid::Grid() {
     this->white.emplace_back(new Knight({0, 6, Colour::White}));
     this->white.emplace_back(new Rook({0, 7, Colour::White}));
 
-    this->td = TextDisplay();
+    this->td = TextDisplay{};
 }
 
 
@@ -37,7 +35,6 @@ void Grid::init() {
             this->grid.at(i).emplace_back(Cell{i, j});
         }
     }
-
     // init all the pieces
     for(int i = 0; i < 8; ++i) {
         this->grid.at(0).at(i).setPiece(this->black.at(i+8));
@@ -45,13 +42,13 @@ void Grid::init() {
         this->grid.at(6).at(i).setPiece(this->white.at(i));
         this->grid.at(7).at(i).setPiece(this->white.at(i+8));
     }
-    
+
     // attach observers(all pieces) to the grid
     for(int i = 0; i < 16; ++i) {
         this->attach(this->black.at(i));
         this->attach(this->black.at(i));
     }
-
+    
     // attach grid to pieces as observer
     for(int i = 0; i < 16; ++i) {
         this->black.at(i)->attach(this);
@@ -81,5 +78,5 @@ void Grid::notify(Subject& lastMove) {
 }
 
 Grid::~Grid() {
-    
+
 }
