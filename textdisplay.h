@@ -16,6 +16,7 @@ public:
     void notify(Subject &board) override;
 
     friend std::ostream &operator<<(std::ostream &out, const TextDisplay &td);
+    ~TextDisplay();
 };
 
 #endif

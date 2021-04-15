@@ -1,11 +1,6 @@
 #include "grid.h"
 
 Grid::Grid() {
-    this->grid.resize(8);
-    for(int i = 0; i < 8; ++i) {
-        this->grid.at(i).resize(8);
-    }
-    
     this->black.resize(16);
     this->white.resize(16);
 
@@ -31,14 +26,15 @@ Grid::Grid() {
     this->white.emplace_back(new Knight({0, 6, Colour::White}));
     this->white.emplace_back(new Rook({0, 7, Colour::White}));
 
-    this->td = TextDisplay{};
+    this->td = TextDisplay();
 }
 
 
 void Grid::init() {
     for(int i = 0; i < 8; ++i) {
+        this->grid.emplace_back(vector<Cell>{});
         for(int j = 0; j < 8; ++j) {
-            this->grid.at(i).emplace_back(Cell(i, j));
+            this->grid.at(i).emplace_back(Cell{i, j});
         }
     }
 
@@ -64,6 +60,26 @@ void Grid::init() {
 }
 
 std::ostream &operator<<(std::ostream &out, const Grid &g) {
-    out << *g.td;
+    out << g.td;
     return out;
+}
+
+void Grid::move(char pieceName, int r, int c) {
+
+}
+
+bool Grid::check() {
+
+}
+
+Result Grid::checkmate() {
+
+}
+
+void Grid::notify(Subject& lastMove) {
+
+}
+
+Grid::~Grid() {
+    
 }
