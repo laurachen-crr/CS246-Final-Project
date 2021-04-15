@@ -9,6 +9,7 @@ std::ostream &operator<<(std::ostream &out, const TextDisplay &td) {
         cout << endl;
     }
     cout << "abcdefgh" << endl;
+    return out;
 }
 
 TextDisplay::TextDisplay() {

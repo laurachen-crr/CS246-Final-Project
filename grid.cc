@@ -63,3 +63,7 @@ void Grid::init() {
     }
 }
 
+std::ostream &operator<<(std::ostream &out, const Grid &g) {
+    out << *g.td;
+    return out;
+}

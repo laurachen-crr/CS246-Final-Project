@@ -28,7 +28,7 @@ public:
     bool check(); // check whether one side is checked
     Result checkmate(); // check whether the game is over
     void notify(Subject& lastMove) override;
-
+    friend std::ostream &operator<<(std::ostream &out, const Grid &g);
 };
 
 #endif
