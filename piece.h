@@ -15,14 +15,14 @@ class Piece : public Subject, public Observer {
     Type type;
     Pos pos;
     Colour colour;
-    virtual bool checkValidMove(int r, int c); // check if move to r, c is a valid move
+    virtual bool checkValidMove(int r, int c) = 0; // check if move to r, c is a valid move
 
 public: 
     Piece(int row, int col, Colour colour, Type type);
     Type getType();
     void MovePiece(int r, int c); // Move a piece of given colour here.
     void notify(Subject &whoFrom) override; // My observers will call this when they've changed state
-    virtual Pos findBestMove();
+    virtual Pos findBestMove() = 0;
 };
 
 class Queen : public Piece {

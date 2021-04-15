@@ -54,4 +54,10 @@ void TextDisplay::init() {
     this->theDisplay.at(6) = this->theDisplay.at(4);
 }
 
+void TextDisplay::notify(Subject &board) {
 
+}
+
+TextDisplay::~TextDisplay() {
+    
+}
