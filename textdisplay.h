@@ -13,7 +13,6 @@ class TextDisplay : public Observer {
 public:
     TextDisplay();
     void notify(Subject &board) override;
-
     friend std::ostream &operator<<(std::ostream &out, const TextDisplay &td);
     ~TextDisplay();
 };

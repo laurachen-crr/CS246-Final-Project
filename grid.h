@@ -7,7 +7,7 @@
 #include "subject.h"
 #include "textdisplay.h"
 
-enum class Result { WhiteWin, BlackWin, Draw };
+enum class Result { WhiteWin, BlackWin, Stalemate, InGame};
 class TextDisplay;
 class InvalidMove {};
 
@@ -24,7 +24,8 @@ public:
     Grid();
     ~Grid();
     void init();
-    void move(char pieceName, int r, int c); // move pieceName to r, c
+    void move(Colour colour, int r, int c); // move pieceName to r, c
+    void computerBestMove();
     bool check(); // check whether one side is checked
     Result checkmate(); // check whether the game is over
     void notify(Subject& lastMove) override;

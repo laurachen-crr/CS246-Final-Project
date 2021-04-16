@@ -9,6 +9,7 @@ std::ostream &operator<<(std::ostream &out, const TextDisplay &td) {
         std::cout << std::endl;
     }
     std::cout << "  abcdefgh" << endl;
+    std::cout << std::endl;
     return out;
 }
 

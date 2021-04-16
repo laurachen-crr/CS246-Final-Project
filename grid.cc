@@ -61,8 +61,8 @@ std::ostream &operator<<(std::ostream &out, const Grid &g) {
     return out;
 }
 
-void Grid::move(char pieceName, int r, int c) {
-
+void Grid::move(Colour colour, int r, int c) {
+    
 }
 
 bool Grid::check() {
@@ -70,7 +70,7 @@ bool Grid::check() {
 }
 
 Result Grid::checkmate() {
-
+    return Result::InGame;
 }
 
 void Grid::notify(Subject& lastMove) {
@@ -79,4 +79,10 @@ void Grid::notify(Subject& lastMove) {
 
 Grid::~Grid() {
 
+}
+
+void computerBestMove(Colour colour, int level) {
+    // first decide if there is any check
+    // if there is no check, decide if there is any capture move
+    // if there is no capture move, make a random move
 }
