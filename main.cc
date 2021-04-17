@@ -184,7 +184,7 @@ int main(int nargs, char *args[]) {
                                 fromRow > 8) {
                                 throw InvalidCommand();
                             } else {
-                                g.removePiece(8 - toRow, toCol - 'a');
+                                g.removePiece(8 - fromRow, fromCol - 'a');
                                 cout << g << endl;
                             }
                         } else if (cmd == "=") {
