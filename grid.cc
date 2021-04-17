@@ -1,6 +1,7 @@
 #include "grid.h"
 #include "textdisplay.h"
 #include "utils.h"
+#include "exception.h"
 
 Grid::Grid() {
     for(int i = 0; i < 8; ++i) {
@@ -70,8 +71,30 @@ std::ostream &operator<<(std::ostream &out, const Grid &g) {
     return out;
 }
 
-void Grid::move(Colour colour, int r, int c) {
-    
+void Grid::move(Colour colour, int fromR, int fromC, int toR, int toC) {
+    Piece* oldPiece = this->grid.at(fromR).at(fromC).getPiece();
+    // piece that user specified doesn't exist
+    if (oldPiece == nullptr) {
+        throw InvalidCommand{};
+    }
+
+    // piece must be same colour as the player
+    Colour pieceColour = oldPiece->getColour();
+    if (pieceColour != colour) {
+        throw InvalidCommand{};
+    }
+
+    // set piece at new location
+    Type type = oldPiece->getType();
+    bool sucessful = this->setPiece(colour, toR, toC, type);
+
+    if (sucessful) {
+        this->removePiece(oldPiece);
+        delete oldPiece;
+        this->td->update(*this);
+    } else {
+        throw InvalidCommand{};
+    }
 }
 
 bool Grid::check() {
@@ -88,10 +111,13 @@ bool Grid::setPiece(int r, int c, Piece* newPiece) {
         Colour colour = newPiece->getColour();
         if (colour == Colour::White) {
             this->white.emplace_back(newPiece);
+            return true;
         } else {
             this->black.emplace_back(newPiece);
+            return true;
         }
     }
+    return false; // check bool returns here
 }
 
 // creates new piece at (r, c)
@@ -180,7 +206,18 @@ void Grid::notify(Subject& whoFrom) {
 }
 
 Grid::~Grid() {
+    // free every piece in black vector
+    for (auto piece : this->black) {
+        delete piece;
+    }
 
+    // free every piece in white vector
+    for (auto piece : this->white) {
+        delete piece;
+    }
+
+    // free text display
+    delete this->td;
 }
 
 void computerBestMove(Colour colour, int level) {

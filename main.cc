@@ -92,9 +92,8 @@ int main(int nargs, char *args[]) {
                                         throw InvalidCommand();
                                     }
                                     // move the piece
-                                    // g.move(whoseMove, fromRow-1, fromCol -
-                                    // 'a', toRow-1, toCol - 'a'); cout << g <<
-                                    // endl;
+                                    g.move(whoseMove, fromRow-1, fromCol - 'a', toRow-1, toCol - 'a'); 
+                                    cout << g << endl;
                                 } else if (cmd == "resign") {
                                     cout << "White Resigned! Black Wins!"
                                          << endl;
@@ -120,9 +119,8 @@ int main(int nargs, char *args[]) {
                                         throw InvalidCommand();
                                     }
                                     // move the piece
-                                    // g.move(whoseMove, fromRow-1, fromCol -
-                                    // 'a', toRow-1, toCol - 'a'); cout << g <<
-                                    // endl;
+                                    g.move(whoseMove, fromRow-1, fromCol - 'a', toRow - 1, toCol - 'a'); 
+                                    cout << g << endl;
                                 } else if (cmd == "resign") {
                                     cout << "Black resigned! White Wins!"
                                          << endl;
