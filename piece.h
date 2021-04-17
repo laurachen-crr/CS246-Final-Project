@@ -2,9 +2,8 @@
 #define PIECE_H
 #include "observer.h"
 #include "subject.h"
-
-enum class Type { King, Queen, Rook, Knight, Bishop, Pawn };
-enum class Colour { Black, White };
+#include "grid.h"
+#include "enums.h"
 
 struct Pos {
     int row;
@@ -20,6 +19,7 @@ class Piece : public Subject, public Observer {
 public: 
     Piece(int row, int col, Colour colour, Type type);
     Type getType();
+    Colour getColour();
     void MovePiece(int r, int c); // Move a piece of given colour here.
     void notify(Subject &whoFrom) override; // My observers will call this when they've changed state
     virtual Pos findBestMove() = 0;

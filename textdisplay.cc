@@ -1,62 +1,81 @@
 #include "textdisplay.h"
+#include "utils.h"
+#include "grid.h"
 
 std::ostream &operator<<(std::ostream &out, const TextDisplay &td) {
-    for (int i = 7; i >= 0; --i) {
-        std::cout << i + 1 << " ";
+    for (int i = 0; i < 8; ++i) {
+        std::cout << 8 - i << " ";
         for (int j = 0; j < 8; ++j) {
             std::cout << td.theDisplay.at(i).at(j);
         }
         std::cout << std::endl;
     }
     std::cout << "  abcdefgh" << endl;
-    std::cout << std::endl;
     return out;
 }
 
 TextDisplay::TextDisplay() {
     this->theDisplay.resize(8);
-    
-    this->theDisplay.at(0).emplace_back('R');
-    this->theDisplay.at(0).emplace_back('N');
-    this->theDisplay.at(0).emplace_back('B');
-    this->theDisplay.at(0).emplace_back('Q');
-    this->theDisplay.at(0).emplace_back('K');
-    this->theDisplay.at(0).emplace_back('B');
-    this->theDisplay.at(0).emplace_back('N');
-    this->theDisplay.at(0).emplace_back('R');
 
-    this->theDisplay.at(7).emplace_back('r');
-    this->theDisplay.at(7).emplace_back('n');
-    this->theDisplay.at(7).emplace_back('b');
-    this->theDisplay.at(7).emplace_back('q');
-    this->theDisplay.at(7).emplace_back('k');
-    this->theDisplay.at(7).emplace_back('b');
-    this->theDisplay.at(7).emplace_back('n');
-    this->theDisplay.at(7).emplace_back('r');
-
-    for(int i = 0; i < 8; ++i) {
-        this->theDisplay.at(1).emplace_back('P');
-        this->theDisplay.at(6).emplace_back('p');
-    }
-
-    for(int i = 0; i < 4; ++i) {
+    for (int i = 0; i < 4; ++i) {
+        this->theDisplay.at(0).emplace_back('-');
+        this->theDisplay.at(0).emplace_back(' ');
         this->theDisplay.at(2).emplace_back('-');
         this->theDisplay.at(2).emplace_back(' ');
         this->theDisplay.at(4).emplace_back('-');
         this->theDisplay.at(4).emplace_back(' ');
+        this->theDisplay.at(6).emplace_back('-');
+        this->theDisplay.at(6).emplace_back(' ');
+
+        this->theDisplay.at(1).emplace_back(' ');
+        this->theDisplay.at(1).emplace_back('-');
         this->theDisplay.at(3).emplace_back(' ');
         this->theDisplay.at(3).emplace_back('-');
         this->theDisplay.at(5).emplace_back(' ');
         this->theDisplay.at(5).emplace_back('-');
+        this->theDisplay.at(7).emplace_back(' ');
+        this->theDisplay.at(7).emplace_back('-');
     }
 
+    this->emptyboard = this->theDisplay;
 }
 
+// void TextDisplay::init() {
+//     this->theDisplay.at(0).at(0) = 'R';
+//     this->theDisplay.at(0).at(1) = 'N';
+//     this->theDisplay.at(0).at(2) = 'B';
+//     this->theDisplay.at(0).at(3) = 'Q';
+//     this->theDisplay.at(0).at(4) = 'K';
+//     this->theDisplay.at(0).at(5) = 'B';
+//     this->theDisplay.at(0).at(6) = 'N';
+//     this->theDisplay.at(0).at(7) = 'R';
 
-void TextDisplay::notify(Subject &board) {
+//     this->theDisplay.at(7).at(0) = 'r';
+//     this->theDisplay.at(7).at(1) = 'n';
+//     this->theDisplay.at(7).at(2) = 'b';
+//     this->theDisplay.at(7).at(3) = 'q';
+//     this->theDisplay.at(7).at(4) = 'k';
+//     this->theDisplay.at(7).at(5) = 'b';
+//     this->theDisplay.at(7).at(6) = 'n';
+//     this->theDisplay.at(7).at(7) = 'r';
 
+//     for (int i = 0; i < 8; ++i) {
+//         this->theDisplay.at(1).at(i) = 'P';
+//         this->theDisplay.at(6).at(i) = 'p';
+//     }
+// }
+
+void TextDisplay::update(Grid &g) {
+    for (int i = 0; i < 8; ++i) {
+        for (int j = 0; j < 8; ++j) {
+            char pieceChar = Utils::pieceToChar(g.getPiece(i, j));
+            if (pieceChar == 'x') {
+                this->theDisplay.at(i).at(j) = this->emptyboard.at(i).at(j);
+            } else {
+                this->theDisplay.at(i).at(j) = pieceChar;
+            }
+        }
+    }
 }
 
-TextDisplay::~TextDisplay() {
-
-}
+TextDisplay::~TextDisplay() {}

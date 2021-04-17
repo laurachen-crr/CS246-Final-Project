@@ -5,13 +5,16 @@
 #include "grid.h"
 #include "observer.h"
 #include "subject.h"
+#include "utils.h"
+
 using namespace std;
 
 class InvalidCommand {};
 
 int main(int nargs, char *args[]) {
     Grid g{};
-
+    g.init();
+    cout << g;
     Colour whoseMove = Colour::White;
     string command;
     char fromCol;
@@ -19,9 +22,8 @@ int main(int nargs, char *args[]) {
     char toCol;
     int toRow;
     string cmd;
-    int seed = time(0);;
+    int seed = time(0);
     bool text = false;
-
 
     try {
         if (nargs > 4) {
@@ -53,7 +55,6 @@ int main(int nargs, char *args[]) {
     while (cin >> command) {
         try {
             if (command == "game") {  // play mode
-                g.init();
                 string whiteplayer, blackplayer;
                 cin >> whiteplayer >> blackplayer;
 
@@ -153,7 +154,6 @@ int main(int nargs, char *args[]) {
                     }
                 }
             } else if (command == "setup") {  // set up mode
-                // need to init the board first
                 while (true) {
                     try {
                         cin >> cmd;
@@ -168,25 +168,35 @@ int main(int nargs, char *args[]) {
                             } else if (toCol < 'a' || toCol > 'h' ||
                                        toRow < 1 || toRow > 8) {
                                 throw InvalidCommand();
+                            } else {
+                                if (g.setPiece(Utils::charToColour(pieceName),
+                                               7 - (toRow - 1), toCol - 'a',
+                                               Utils::charToType(pieceName))) {
+                                    cout << g << endl;
+                                } else {
+                                    throw InvalidCommand();
+                                }
                             }
-                            // make a new piece "pieceName" and place it
                         } else if (cmd == "-") {
                             cin >> fromCol;
                             cin >> fromRow;
                             if (fromCol < 'a' || fromCol > 'h' || fromRow < 1 ||
                                 fromRow > 8) {
                                 throw InvalidCommand();
+                            } else {
+                                cout << g << endl;
+                                ;
                             }
-                            // remove the piece from board; if there is no
-                            // piece, do nothing
                         } else if (cmd == "=") {
                             string colour;
                             cin >> colour;
-                            if (colour != "white" || "black") {
+                            if (colour == "white") {
+                                whoseMove = Colour::White;
+                            } else if (colour == "black") {
+                                whoseMove = Colour::Black;
+                            } else {
                                 throw InvalidCommand();
                             }
-                            // change colour
-                            whoseMove = Colour::Black;
                         } else if (cmd == "done") {
                             break;
                         } else {

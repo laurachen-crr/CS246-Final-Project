@@ -1,16 +1,18 @@
 #ifndef CELL_H
 #define CELL_H
-#include "piece.h"
+
+class Piece;
 
 class Cell {
     int r;
     int c;
-    Piece* curPiece = nullptr;
+    Piece* piece = nullptr;
 
 public:
     Cell(int r, int c);
-    void setPiece(Piece *mypiece); // set mypiece on the cell
+    void setPiece(Piece *piece); // set mypiece on the cell
     void removePiece(); // remove the current piece
+    Piece* getPiece();
 };
 
 #endif

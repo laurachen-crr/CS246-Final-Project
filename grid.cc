@@ -1,4 +1,6 @@
 #include "grid.h"
+#include "textdisplay.h"
+#include "utils.h"
 
 Grid::Grid() {
     for(int i = 0; i < 8; ++i) {
@@ -24,7 +26,7 @@ Grid::Grid() {
     this->white.emplace_back(new Knight({0, 6, Colour::White}));
     this->white.emplace_back(new Rook({0, 7, Colour::White}));
 
-    this->td = TextDisplay{};
+    this->td = new TextDisplay{};
 }
 
 
@@ -42,13 +44,15 @@ void Grid::init() {
         this->grid.at(6).at(i).setPiece(this->white.at(i));
         this->grid.at(7).at(i).setPiece(this->white.at(i+8));
     }
+    // update textdisplay
+    this->td->update(*this);
 
     // attach observers(all pieces) to the grid
     for(int i = 0; i < 16; ++i) {
         this->attach(this->black.at(i));
         this->attach(this->black.at(i));
     }
-    
+
     // attach grid to pieces as observer
     for(int i = 0; i < 16; ++i) {
         this->black.at(i)->attach(this);
@@ -56,8 +60,13 @@ void Grid::init() {
     }
 }
 
+// r = 0, ..., 7; c = 0, ..., 7
+Piece* Grid::getPiece(int r, int c) {
+    return this->grid.at(r).at(c).getPiece();
+}
+
 std::ostream &operator<<(std::ostream &out, const Grid &g) {
-    out << g.td;
+    out << *g.td;
     return out;
 }
 
@@ -66,6 +75,88 @@ void Grid::move(Colour colour, int r, int c) {
 }
 
 bool Grid::check() {
+    return false;
+}
+
+// sets newPiece at (r, c)
+// this method does not clean up memory or validate!
+bool Grid::setPiece(int r, int c, Piece* newPiece) {
+    Piece* oldPiece = this->grid.at(r).at(c).getPiece();
+    this->removePiece(oldPiece);
+    this->grid.at(r).at(c).setPiece(newPiece);
+    if (newPiece != nullptr) {
+        Colour colour = newPiece->getColour();
+        if (colour == Colour::White) {
+            this->white.emplace_back(newPiece);
+        } else {
+            this->black.emplace_back(newPiece);
+        }
+    }
+}
+
+// creates new piece at (r, c)
+// this method cleans up memory and validates
+bool Grid::setPiece(Colour colour, int r, int c, Type type) {
+    Piece* oldPiece = this->grid.at(r).at(c).getPiece();
+    Piece* newPiece = Utils::createPiece(r, c, colour, type);
+    this->setPiece(r, c, newPiece);
+    if (this->check()) { // in check
+        this->setPiece(r, c, oldPiece);
+        delete newPiece;
+        return false;
+    } else if (type == Type::Pawn && (r == 0 || r == 7)) { // pawn on last/first row
+        this->setPiece(r, c, oldPiece);
+        delete newPiece;
+        return false;
+    } else if (type == Type::King && findPiece(type, colour) != nullptr) { // king already exists
+        this->setPiece(r, c, oldPiece);
+        delete newPiece;
+        return false;
+    } else {
+        delete oldPiece;
+        this->td->update(*this);
+        return true;
+    }
+}
+
+// return first found piece that match type and colour
+Piece* Grid::findPiece(Type type, Colour colour) {
+    if (colour == Colour::Black) {
+        for (auto piece : this->black) {
+            if (piece->getType() == type) {
+                return piece;
+            }
+        }
+    } else {
+        for (auto piece : this->white) {
+            if (piece->getType() == type) {
+                return piece;
+            }
+        }
+    }
+    return nullptr;
+}
+
+// remove piece from grid
+// this method does not clean up memory!
+void Grid::removePiece(Piece* piece) {
+    for (unsigned int i = 0; i < this->black.size(); ++i) {
+        if (this->black.at(i) == piece) {
+            this->black.erase(this->black.begin() + i);
+        }
+    }
+    for (unsigned int i = 0; i < this->white.size(); ++i) {
+        if (this->white.at(i) == piece) {
+            this->white.erase(this->white.begin() + i);
+        }
+    }
+    for (unsigned int i = 0; i < this->grid.size(); ++i) {
+        for (unsigned int j = 0; j < this->grid.at(i).size(); ++j) {
+            if (this->grid.at(i).at(j).getPiece() == piece) {
+                this->grid.at(i).at(j).setPiece(nullptr);
+            }
+        }
+    }
 
 }
 
@@ -73,8 +164,9 @@ Result Grid::checkmate() {
     return Result::InGame;
 }
 
-void Grid::notify(Subject& lastMove) {
-
+void Grid::notify(Subject& whoFrom) {
+    // downcast from subject to a piece (whoFrom MUST be class Piece)
+    Piece& piece = static_cast<Piece&>(whoFrom);
 }
 
 Grid::~Grid() {
