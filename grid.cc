@@ -95,6 +95,7 @@ bool Grid::setPiece(int r, int c, Piece* newPiece) {
 }
 
 // creates new piece at (r, c)
+// return true if validation passes, else false
 // this method cleans up memory and validates
 bool Grid::setPiece(Colour colour, int r, int c, Type type) {
     Piece* oldPiece = this->grid.at(r).at(c).getPiece();
@@ -158,6 +159,15 @@ void Grid::removePiece(Piece* piece) {
         }
     }
 
+}
+
+// remove piece at (r, c) from grid
+// this method does clean up memory
+void Grid::removePiece(int r, int c) {
+    Piece* piece = this->grid.at(r).at(c).getPiece();
+    this->removePiece(piece);
+    this->td->update(*this);
+    delete piece;
 }
 
 Result Grid::checkmate() {

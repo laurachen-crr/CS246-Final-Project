@@ -170,7 +170,7 @@ int main(int nargs, char *args[]) {
                                 throw InvalidCommand();
                             } else {
                                 if (g.setPiece(Utils::charToColour(pieceName),
-                                               7 - (toRow - 1), toCol - 'a',
+                                               8 - toRow, toCol - 'a',
                                                Utils::charToType(pieceName))) {
                                     cout << g << endl;
                                 } else {
@@ -184,8 +184,8 @@ int main(int nargs, char *args[]) {
                                 fromRow > 8) {
                                 throw InvalidCommand();
                             } else {
+                                g.removePiece(8 - toRow, toCol - 'a');
                                 cout << g << endl;
-                                ;
                             }
                         } else if (cmd == "=") {
                             string colour;
