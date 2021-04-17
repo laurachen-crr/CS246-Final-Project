@@ -30,6 +30,7 @@ class Grid : public Subject, public Observer {
     Piece* findPiece(Type type, Colour colour);
     bool check();        // check whether one side is checked
     void removePiece(Piece* piece);
+    void removePiece(int r, int c);
     Result checkmate();  // check whether the game is over
     friend std::ostream &operator<<(std::ostream &out, const Grid &g);
     void notify(Subject &whoFrom) override;

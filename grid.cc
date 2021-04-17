@@ -60,7 +60,7 @@ void Grid::init() {
     }
 }
 
-// r = 0, ..., 7; c = 0, ..., 7
+// gets piece at (r, c)
 Piece* Grid::getPiece(int r, int c) {
     return this->grid.at(r).at(c).getPiece();
 }
@@ -81,7 +81,7 @@ bool Grid::check() {
 // sets newPiece at (r, c)
 // this method does not clean up memory or validate!
 bool Grid::setPiece(int r, int c, Piece* newPiece) {
-    Piece* oldPiece = this->grid.at(r).at(c).getPiece();
+    Piece* oldPiece = this->getPiece(r, c);
     this->removePiece(oldPiece);
     this->grid.at(r).at(c).setPiece(newPiece);
     if (newPiece != nullptr) {
@@ -95,9 +95,10 @@ bool Grid::setPiece(int r, int c, Piece* newPiece) {
 }
 
 // creates new piece at (r, c)
+// return true if validation passes, else false
 // this method cleans up memory and validates
 bool Grid::setPiece(Colour colour, int r, int c, Type type) {
-    Piece* oldPiece = this->grid.at(r).at(c).getPiece();
+    Piece* oldPiece = this->getPiece(r, c);
     Piece* newPiece = Utils::createPiece(r, c, colour, type);
     this->setPiece(r, c, newPiece);
     if (this->check()) { // in check
@@ -152,12 +153,21 @@ void Grid::removePiece(Piece* piece) {
     }
     for (unsigned int i = 0; i < this->grid.size(); ++i) {
         for (unsigned int j = 0; j < this->grid.at(i).size(); ++j) {
-            if (this->grid.at(i).at(j).getPiece() == piece) {
+            if (this->getPiece(i, j) == piece) {
                 this->grid.at(i).at(j).setPiece(nullptr);
             }
         }
     }
 
+}
+
+// remove piece at (r, c) from grid
+// this method does clean up memory
+void Grid::removePiece(int r, int c) {
+    Piece* piece = this->getPiece(r, c);
+    this->removePiece(piece);
+    this->td->update(*this);
+    delete piece;
 }
 
 Result Grid::checkmate() {
