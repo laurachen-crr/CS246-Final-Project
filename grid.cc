@@ -61,10 +61,15 @@ void Grid::init() {
     }
 }
 
-// gets piece at (r, c)
+// get piece at (r, c)
 Piece* Grid::getPiece(int r, int c) {
-    return this->grid.at(r).at(c).getPiece();
+    return this->getCell(r, c).getPiece();
 }
+
+// get cell at (r, c)
+Cell& Grid::getCell(int r, int c) {
+    return this->grid.at(r).at(c);
+} 
 
 std::ostream &operator<<(std::ostream &out, const Grid &g) {
     out << *g.td;
@@ -108,7 +113,7 @@ bool Grid::check() {
 void Grid::setPiece(int r, int c, Piece* newPiece) {
     Piece* oldPiece = this->getPiece(r, c);
     this->removePiece(oldPiece);
-    this->grid.at(r).at(c).setPiece(newPiece);
+    this->getCell(r, c).setPiece(newPiece);
     if (newPiece != nullptr) {
         Colour colour = newPiece->getColour();
         if (colour == Colour::White) {
@@ -177,10 +182,10 @@ void Grid::removePiece(Piece* piece) {
             this->white.erase(this->white.begin() + i);
         }
     }
-    for (unsigned int i = 0; i < this->grid.size(); ++i) {
-        for (unsigned int j = 0; j < this->grid.at(i).size(); ++j) {
-            if (this->getPiece(i, j) == piece) {
-                this->grid.at(i).at(j).removePiece();
+    for (unsigned int r = 0; r < this->grid.size(); ++r) {
+        for (unsigned int c = 0; c < this->grid.at(c).size(); ++c) {
+            if (this->getPiece(r, c) == piece) {
+                this->getCell(r, c).removePiece();
             }
         }
     }

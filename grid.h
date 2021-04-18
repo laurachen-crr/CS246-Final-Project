@@ -36,6 +36,7 @@ class Grid : public Subject, public Observer {
     void notify(Subject &whoFrom) override;
     // piece: rnbqkpRNBQKP
     Piece* getPiece(int r, int c);  // returns nullptr is there is no piece on it
+    Cell& getCell(int r, int c);
 };
 
 #endif
