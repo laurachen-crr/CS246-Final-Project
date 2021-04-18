@@ -71,30 +71,31 @@ std::ostream &operator<<(std::ostream &out, const Grid &g) {
     return out;
 }
 
-void Grid::move(Colour colour, int fromR, int fromC, int toR, int toC) {
-    Piece* oldPiece = this->grid.at(fromR).at(fromC).getPiece();
+bool Grid::move(Colour colour, int fromR, int fromC, int toR, int toC) {
+    Piece* oldPiece = this->getPiece(fromR, fromC);
     // piece that user specified doesn't exist
     if (oldPiece == nullptr) {
-        throw InvalidCommand{};
+        return false;
     }
 
     // piece must be same colour as the player
     Colour pieceColour = oldPiece->getColour();
     if (pieceColour != colour) {
-        throw InvalidCommand{};
+        return false;
     }
+
+    // Check for valid move
+
+    // Check for checkmate
+
+    Piece* temp = this->getPiece(toR, toC);
 
     // set piece at new location
-    Type type = oldPiece->getType();
-    bool sucessful = this->setPiece(colour, toR, toC, type);
-
-    if (sucessful) {
-        this->removePiece(oldPiece);
-        delete oldPiece;
-        this->td->update(*this);
-    } else {
-        throw InvalidCommand{};
-    }
+    this->removePiece(oldPiece);
+    this->setPiece(toR, toC, oldPiece);
+    delete temp;
+    this->td->update(*this);
+    return true;
 }
 
 bool Grid::check() {
@@ -103,7 +104,7 @@ bool Grid::check() {
 
 // sets newPiece at (r, c)
 // this method does not clean up memory or validate!
-bool Grid::setPiece(int r, int c, Piece* newPiece) {
+void Grid::setPiece(int r, int c, Piece* newPiece) {
     Piece* oldPiece = this->getPiece(r, c);
     this->removePiece(oldPiece);
     this->grid.at(r).at(c).setPiece(newPiece);
@@ -111,13 +112,10 @@ bool Grid::setPiece(int r, int c, Piece* newPiece) {
         Colour colour = newPiece->getColour();
         if (colour == Colour::White) {
             this->white.emplace_back(newPiece);
-            return true;
         } else {
             this->black.emplace_back(newPiece);
-            return true;
         }
     }
-    return false; // check bool returns here
 }
 
 // creates new piece at (r, c)

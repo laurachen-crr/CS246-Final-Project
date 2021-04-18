@@ -23,10 +23,10 @@ class Grid : public Subject, public Observer {
     Grid();
     ~Grid();
     void init();
-    void move(Colour colour, int fromR, int fromC, int toR, int toC);  // move pieceName to toR, toC
+    bool move(Colour colour, int fromR, int fromC, int toR, int toC);  // move pieceName to toR, toC
     void computerBestMove();
     bool setPiece(Colour colour, int r, int c, Type type);
-    bool setPiece(int r, int c, Piece* newPiece);
+    void setPiece(int r, int c, Piece* newPiece);
     Piece* findPiece(Type type, Colour colour);
     bool check();        // check whether one side is checked
     void removePiece(Piece* piece);
