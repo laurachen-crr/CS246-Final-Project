@@ -14,6 +14,10 @@ Type Piece::getType() {
     return this->type;
 }
 
+Pos Piece::getPos() {
+    return this->pos;
+}
+
 King::King(int row, int col, Colour colour) : Piece{row, col, colour, Type::King} {}
 
 Queen::Queen(int row, int col, Colour colour) : Piece{row, col, colour, Type::Queen} {}
@@ -27,15 +31,43 @@ Rook::Rook(int row, int col, Colour colour) :Piece::Piece{row, col, colour, Type
 Knight::Knight(int row, int col, Colour colour) : Piece{row, col, colour, Type::Knight} {}
 
 bool King::checkValidMove(int r, int c) { 
-
+    int rowdiff = this->getPos().row - r;
+    int coldiff = this->getPos().col - c;
+    if(rowdiff == 0 && coldiff == 0) {
+        return false;
+    } else if(rowdiff >= -1 && rowdiff <=1 && coldiff >= -1 && coldiff <=1) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
 bool Queen::checkValidMove(int r, int c) {
-
+    int rowdiff = this->getPos().row - r;
+    int coldiff = this->getPos().col - c;
+    if(rowdiff == 0 && coldiff == 0) {
+        return false;
+    }
+    if(rowdiff == 0 || coldiff) {
+        return true;
+    } else if(abs(rowdiff) == abs(coldiff)) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
 bool Bishop::checkValidMove(int r, int c) {
-
+    int rowdiff = this->getPos().row - r;
+    int coldiff = this->getPos().col - c;
+    if(rowdiff == 0 && coldiff == 0) {
+        return false;
+    }
+    if(abs(rowdiff) == abs(coldiff)) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
 bool Pawn::checkValidMove(int r, int c) {
@@ -43,7 +75,15 @@ bool Pawn::checkValidMove(int r, int c) {
 }
 
 bool Rook::checkValidMove(int r, int c) {
-
+    int rowdiff = this->getPos().row - r;
+    int coldiff = this->getPos().col - c;
+    if(rowdiff == 0 && coldiff == 0) {
+        return false;
+    } else if(rowdiff == 0 || coldiff == 0) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
 bool Knight::checkValidMove(int r, int c) {
