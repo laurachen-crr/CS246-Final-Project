@@ -1,4 +1,5 @@
 #include "piece.h"
+#include "grid.h"
 
 Piece::Piece(int row, int col, Colour colour, Type type) {
     this->pos = {row, col};
@@ -53,92 +54,28 @@ Rook::Rook(int row, int col, Colour colour)
 Knight::Knight(int row, int col, Colour colour)
     : Piece{row, col, colour, Type::Knight} {}
 
-bool King::checkValidMove(int r, int c) {
-    int rowdiff = this->getPos().row - r;
-    int coldiff = this->getPos().col - c;
-    if (rowdiff == 0 && coldiff == 0) {
-        return false;
-    } else if (rowdiff >= -1 && rowdiff <= 1 && coldiff >= -1 && coldiff <= 1) {
-        return true;
-    } else {
-        return false;
-    }
+bool King::checkValidMove(int r, int c, Grid& g) { // need modification
+
 }
 
-bool Queen::checkValidMove(int r, int c) {
-    int rowdiff = this->getPos().row - r;
-    int coldiff = this->getPos().col - c;
-    if (rowdiff == 0 && coldiff == 0) {
-        return false;
-    }
-    if (rowdiff == 0 || coldiff) {
-        return true;
-    } else if (abs(rowdiff) == abs(coldiff)) {
-        return true;
-    } else {
-        return false;
-    }
+bool Queen::checkValidMove(int r, int c, Grid& g) { // need modification
+    
 }
 
-bool Bishop::checkValidMove(int r, int c) {
-    int rowdiff = this->getPos().row - r;
-    int coldiff = this->getPos().col - c;
-    if (rowdiff == 0 && coldiff == 0) {
-        return false;
-    }
-    if (abs(rowdiff) == abs(coldiff)) {
-        return true;
-    } else {
-        return false;
-    }
+bool Bishop::checkValidMove(int r, int c, Grid& g) {
+    
 }
 
-bool Pawn::checkValidMove(int r, int c) {
-    int oldR = this->getPos().row;
-    int oldC = this->getPos().col;
-    int rowdiff = this->getPos().row - r;
-    int coldiff = this->getPos().col - c;
-
-    if (oldR == 2) {
-        if (c == oldR + 1 || rowdiff == oldR + 2) {
-            return true;
-        } else {
-            return false;
-        }
-    }
+bool Pawn::checkValidMove(int r, int c, Grid& g) {
+    
 }
 
-bool Rook::checkValidMove(int r, int c) {
-    int rowdiff = this->getPos().row - r;
-    int coldiff = this->getPos().col - c;
-    if (rowdiff == 0 && coldiff == 0) {
-        return false;
-    } else if (rowdiff == 0 || coldiff == 0) {
-        return true;
-    } else {
-        return false;
-    }
+bool Rook::checkValidMove(int r, int c, Grid& g) {
+
 }
 
-bool Knight::checkValidMove(int r, int c) {
-    int oldR = this->getPos().row;
-    int oldC = this->getPos().col;
+bool Knight::checkValidMove(int r, int c, Grid& g) {
 
-    if (r == oldR + 1 || r == oldR - 1) {
-        if (c == oldC + 2 || c == oldC - 2) {
-            return true;
-        } else {
-            return false;
-        }
-    } else if (r == oldR + 2 || r == oldR - 2) {
-        if (c == oldC + 1 || c == oldC - 1) {
-            return true;
-        } else {
-            return false;
-        }
-    } else {
-        return false;
-    }
 }
 
 Pos King::findBestMove() {}

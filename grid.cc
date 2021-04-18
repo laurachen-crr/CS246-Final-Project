@@ -183,7 +183,7 @@ void Grid::removePiece(Piece* piece) {
         }
     }
     for (unsigned int r = 0; r < this->grid.size(); ++r) {
-        for (unsigned int c = 0; c < this->grid.at(c).size(); ++c) {
+        for (unsigned int c = 0; c < this->grid.at(r).size(); ++c) {
             if (this->getPiece(r, c) == piece) {
                 this->getCell(r, c).removePiece();
             }
