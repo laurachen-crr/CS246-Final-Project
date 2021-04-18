@@ -6,10 +6,9 @@
 #include "observer.h"
 #include "subject.h"
 #include "utils.h"
+#include "exception.h"
 
 using namespace std;
-
-class InvalidCommand {};
 
 int main(int nargs, char *args[]) {
     Grid g{};
@@ -92,7 +91,9 @@ int main(int nargs, char *args[]) {
                                         throw InvalidCommand();
                                     }
                                     // move the piece
-                                    g.move(whoseMove, fromRow-1, fromCol - 'a', toRow-1, toCol - 'a'); 
+                                    if (!(g.move(whoseMove, 8 - fromRow, fromCol - 'a', 8 - toRow, toCol - 'a'))) {
+                                        throw InvalidCommand{};
+                                    }
                                     cout << g << endl;
                                 } else if (cmd == "resign") {
                                     cout << "White Resigned! Black Wins!"
@@ -119,7 +120,9 @@ int main(int nargs, char *args[]) {
                                         throw InvalidCommand();
                                     }
                                     // move the piece
-                                    g.move(whoseMove, fromRow-1, fromCol - 'a', toRow - 1, toCol - 'a'); 
+                                    if (!(g.move(whoseMove, 8 - fromRow, fromCol - 'a', 8 - toRow, toCol - 'a'))) {
+                                        throw InvalidCommand{};
+                                    }
                                     cout << g << endl;
                                 } else if (cmd == "resign") {
                                     cout << "Black resigned! White Wins!"
