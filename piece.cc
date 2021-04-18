@@ -78,6 +78,30 @@ bool Knight::checkValidMove(int r, int c, Grid& g) {
 
 }
 
+vector<Pos> King::getValidMoves(Grid& g) {
+    
+}
+
+vector<Pos> Queen::getValidMoves(Grid& g) {
+
+}
+
+vector<Pos> Bishop::getValidMoves(Grid& g) {
+
+}
+
+vector<Pos> Pawn::getValidMoves(Grid& g) {
+    
+}
+
+vector<Pos> Knight::getValidMoves(Grid& g) {
+    
+}
+
+vector<Pos> Rook::getValidMoves(Grid& g) {
+
+}
+
 Pos King::findBestMove() {}
 
 Pos Queen::findBestMove() {}
