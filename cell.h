@@ -1,11 +1,11 @@
 #ifndef CELL_H
 #define CELL_H
+#include "structs.h"
 
 class Piece;
 
 class Cell {
-    int r;
-    int c;
+    Pos pos;
     Piece* piece = nullptr;
 
 public:

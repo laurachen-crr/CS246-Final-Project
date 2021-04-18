@@ -71,21 +71,3 @@ Colour Utils::charToColour(char c) {
     }
 }
 
-Piece* Utils::createPiece(int row, int col, Colour colour, Type type) {
-    switch(type) {
-        case Type::Bishop:
-            return new Bishop{row, col, colour};
-        case Type::King:
-            return new King{row, col, colour};
-        case Type::Queen:
-            return new Queen{row, col, colour};
-        case Type::Knight:
-            return new Knight{row, col, colour};
-        case Type::Pawn:
-            return new Pawn{row, col, colour};
-        case Type::Rook:
-            return new Rook{row, col, colour};
-        default:
-            return nullptr;
-    }
-}

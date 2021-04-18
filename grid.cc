@@ -5,27 +5,27 @@
 
 Grid::Grid() {
     for(int i = 0; i < 8; ++i) {
-        this->white.emplace_back(new Pawn({1, i, Colour::White}));
-        this->black.emplace_back(new Pawn({6, i, Colour::Black}));
+        this->white.emplace_back(Piece::createPiece(1, i, Colour::White, Type::Pawn));
+        this->black.emplace_back(Piece::createPiece(6, i, Colour::Black, Type::Pawn));
     }
 
-    this->black.emplace_back(new Rook({7, 0, Colour::Black}));
-    this->black.emplace_back(new Knight({7, 1, Colour::Black}));
-    this->black.emplace_back(new Bishop({7, 2, Colour::Black}));
-    this->black.emplace_back(new King({7, 3, Colour::Black}));
-    this->black.emplace_back(new Queen({7, 4, Colour::Black}));
-    this->black.emplace_back(new Bishop({7, 5, Colour::Black}));
-    this->black.emplace_back(new Knight({7, 6, Colour::Black}));
-    this->black.emplace_back(new Rook({7, 7, Colour::Black}));
+    this->black.emplace_back(Piece::createPiece(7, 0, Colour::Black, Type::Rook));
+    this->black.emplace_back(Piece::createPiece(7, 1, Colour::Black, Type::Knight));
+    this->black.emplace_back(Piece::createPiece(7, 2, Colour::Black, Type::Bishop));
+    this->black.emplace_back(Piece::createPiece(7, 3, Colour::Black, Type::Knight));
+    this->black.emplace_back(Piece::createPiece(7, 4, Colour::Black, Type::Queen));
+    this->black.emplace_back(Piece::createPiece(7, 5, Colour::Black, Type::Bishop));
+    this->black.emplace_back(Piece::createPiece(7, 6, Colour::Black, Type::Knight));
+    this->black.emplace_back(Piece::createPiece(7, 7, Colour::Black, Type::Rook));
 
-    this->white.emplace_back(new Rook({0, 0, Colour::White}));
-    this->white.emplace_back(new Knight({0, 1, Colour::White}));
-    this->white.emplace_back(new Bishop({0, 2, Colour::White}));
-    this->white.emplace_back(new King({0, 3, Colour::White}));
-    this->white.emplace_back(new Queen({0, 4, Colour::White}));
-    this->white.emplace_back(new Bishop({0, 5, Colour::White}));
-    this->white.emplace_back(new Knight({0, 6, Colour::White}));
-    this->white.emplace_back(new Rook({0, 7, Colour::White}));
+    this->white.emplace_back(Piece::createPiece(0, 0, Colour::White, Type::Rook));
+    this->white.emplace_back(Piece::createPiece(0, 1, Colour::White, Type::Knight));
+    this->white.emplace_back(Piece::createPiece(0, 2, Colour::White, Type::Bishop));
+    this->white.emplace_back(Piece::createPiece(0, 3, Colour::White, Type::King));
+    this->white.emplace_back(Piece::createPiece(0, 4, Colour::White, Type::Queen));
+    this->white.emplace_back(Piece::createPiece(0, 5, Colour::White, Type::Bishop));
+    this->white.emplace_back(Piece::createPiece(0, 6, Colour::White, Type::Knight));
+    this->white.emplace_back(Piece::createPiece(0, 7, Colour::White, Type::Rook));
 
     this->td = new TextDisplay{};
 }
@@ -123,7 +123,7 @@ void Grid::setPiece(int r, int c, Piece* newPiece) {
 // this method cleans up memory and validates
 bool Grid::setPiece(Colour colour, int r, int c, Type type) {
     Piece* oldPiece = this->getPiece(r, c);
-    Piece* newPiece = Utils::createPiece(r, c, colour, type);
+    Piece* newPiece = Piece::createPiece(r, c, colour, type);
     this->setPiece(r, c, newPiece);
     if (this->check()) { // in check
         this->setPiece(r, c, oldPiece);
@@ -223,3 +223,4 @@ void computerBestMove(Colour colour, int level) {
     // if there is no check, decide if there is any capture move
     // if there is no capture move, make a random move
 }
+
