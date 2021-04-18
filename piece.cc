@@ -6,36 +6,57 @@ Piece::Piece(int row, int col, Colour colour, Type type) {
     this->type = type;
 }
 
-Colour Piece::getColour() {
-    return this->colour;
+// factory method pattern
+// use this instead of Piece subclass constructors
+Piece* Piece::createPiece(int row, int col, Colour colour, Type type) {
+    switch(type) {
+        case Type::Bishop:
+            return new Bishop{row, col, colour};
+        case Type::King:
+            return new King{row, col, colour};
+        case Type::Queen:
+            return new Queen{row, col, colour};
+        case Type::Knight:
+            return new Knight{row, col, colour};
+        case Type::Pawn:
+            return new Pawn{row, col, colour};
+        case Type::Rook:
+            return new Rook{row, col, colour};
+        default:
+            return nullptr;
+    }
 }
 
-Type Piece::getType() {
-    return this->type;
-}
+Colour Piece::getColour() { return this->colour; }
 
-Pos Piece::getPos() {
-    return this->pos;
-}
+Type Piece::getType() { return this->type; }
 
-King::King(int row, int col, Colour colour) : Piece{row, col, colour, Type::King} {}
+Pos Piece::getPos() { return this->pos; }
 
-Queen::Queen(int row, int col, Colour colour) : Piece{row, col, colour, Type::Queen} {}
+King::King(int row, int col, Colour colour)
+    : Piece{row, col, colour, Type::King} {}
 
-Bishop::Bishop(int row, int col, Colour colour) : Piece{row, col, colour, Type::Bishop} {}
+Queen::Queen(int row, int col, Colour colour)
+    : Piece{row, col, colour, Type::Queen} {}
 
-Pawn::Pawn(int row, int col, Colour colour) : Piece{row, col, colour, Type::Pawn} {}
+Bishop::Bishop(int row, int col, Colour colour)
+    : Piece{row, col, colour, Type::Bishop} {}
 
-Rook::Rook(int row, int col, Colour colour) :Piece::Piece{row, col, colour, Type::Rook} {}
+Pawn::Pawn(int row, int col, Colour colour)
+    : Piece{row, col, colour, Type::Pawn} {}
 
-Knight::Knight(int row, int col, Colour colour) : Piece{row, col, colour, Type::Knight} {}
+Rook::Rook(int row, int col, Colour colour)
+    : Piece::Piece{row, col, colour, Type::Rook} {}
 
-bool King::checkValidMove(int r, int c) { 
+Knight::Knight(int row, int col, Colour colour)
+    : Piece{row, col, colour, Type::Knight} {}
+
+bool King::checkValidMove(int r, int c) {
     int rowdiff = this->getPos().row - r;
     int coldiff = this->getPos().col - c;
-    if(rowdiff == 0 && coldiff == 0) {
+    if (rowdiff == 0 && coldiff == 0) {
         return false;
-    } else if(rowdiff >= -1 && rowdiff <=1 && coldiff >= -1 && coldiff <=1) {
+    } else if (rowdiff >= -1 && rowdiff <= 1 && coldiff >= -1 && coldiff <= 1) {
         return true;
     } else {
         return false;
@@ -45,12 +66,12 @@ bool King::checkValidMove(int r, int c) {
 bool Queen::checkValidMove(int r, int c) {
     int rowdiff = this->getPos().row - r;
     int coldiff = this->getPos().col - c;
-    if(rowdiff == 0 && coldiff == 0) {
+    if (rowdiff == 0 && coldiff == 0) {
         return false;
     }
-    if(rowdiff == 0 || coldiff) {
+    if (rowdiff == 0 || coldiff) {
         return true;
-    } else if(abs(rowdiff) == abs(coldiff)) {
+    } else if (abs(rowdiff) == abs(coldiff)) {
         return true;
     } else {
         return false;
@@ -60,10 +81,10 @@ bool Queen::checkValidMove(int r, int c) {
 bool Bishop::checkValidMove(int r, int c) {
     int rowdiff = this->getPos().row - r;
     int coldiff = this->getPos().col - c;
-    if(rowdiff == 0 && coldiff == 0) {
+    if (rowdiff == 0 && coldiff == 0) {
         return false;
     }
-    if(abs(rowdiff) == abs(coldiff)) {
+    if (abs(rowdiff) == abs(coldiff)) {
         return true;
     } else {
         return false;
@@ -76,10 +97,10 @@ bool Pawn::checkValidMove(int r, int c) {
     int rowdiff = this->getPos().row - r;
     int coldiff = this->getPos().col - c;
 
-    if(oldR == 2){
-        if(c == oldR + 1 || rowdiff == oldR + 2){
+    if (oldR == 2) {
+        if (c == oldR + 1 || rowdiff == oldR + 2) {
             return true;
-        } else{
+        } else {
             return false;
         }
     }
@@ -88,9 +109,9 @@ bool Pawn::checkValidMove(int r, int c) {
 bool Rook::checkValidMove(int r, int c) {
     int rowdiff = this->getPos().row - r;
     int coldiff = this->getPos().col - c;
-    if(rowdiff == 0 && coldiff == 0) {
+    if (rowdiff == 0 && coldiff == 0) {
         return false;
-    } else if(rowdiff == 0 || coldiff == 0) {
+    } else if (rowdiff == 0 || coldiff == 0) {
         return true;
     } else {
         return false;
@@ -118,36 +139,24 @@ bool Knight::checkValidMove(int r, int c) {
     }
 }
 
-Pos King::findBestMove() {
-    
-}
+Pos King::findBestMove() {}
 
-Pos Queen::findBestMove() {
-    
-}
+Pos Queen::findBestMove() {}
 
-Pos Bishop::findBestMove() {
-    
-}
+Pos Bishop::findBestMove() {}
 
-Pos Pawn::findBestMove() {
-    
-}
+Pos Pawn::findBestMove() {}
 
-Pos Rook::findBestMove() {
-    
-}
+Pos Rook::findBestMove() {}
 
-Pos Knight::findBestMove() {
-    
-}
-
+Pos Knight::findBestMove() {}
 
 void Piece::MovePiece(int r, int c) {
-
+    this->pos.row = r;
+    this->pos.col = c;
 }
 
-void Piece::notify(Subject &whoFrom) {
-    // downcast from subject to a grid (whoFrom MUST be class Grid) 
+void Piece::notify(Subject& whoFrom) {
+    // downcast from subject to a grid (whoFrom MUST be class Grid)
     Grid& grid = static_cast<Grid&>(whoFrom);
 }

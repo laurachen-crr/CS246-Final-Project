@@ -4,11 +4,7 @@
 #include "subject.h"
 #include "grid.h"
 #include "enums.h"
-
-struct Pos {
-    int row;
-    int col;
-};
+#include "structs.h"
 
 class Piece : public Subject, public Observer {
     Type type;
@@ -17,6 +13,7 @@ class Piece : public Subject, public Observer {
 
 public: 
     Piece(int row, int col, Colour colour, Type type);
+    static Piece* createPiece(int row, int col, Colour colour, Type type);
     Type getType();
     Colour getColour();
     Pos getPos();
