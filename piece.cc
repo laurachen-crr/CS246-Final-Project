@@ -87,7 +87,24 @@ bool Rook::checkValidMove(int r, int c) {
 }
 
 bool Knight::checkValidMove(int r, int c) {
+    int oldR = this->getPos().row;
+    int oldC = this->getPos().col;
 
+    if (r == oldR + 1 || r == oldR - 1) {
+        if (c == oldC + 2 || c == oldC - 2) {
+            return true;
+        } else {
+            return false;
+        }
+    } else if (r == oldR + 2 || r == oldR - 2) {
+        if (c == oldC + 1 || c == oldC - 1) {
+            return true;
+        } else {
+            return false;
+        }
+    } else {
+        return false;
+    }
 }
 
 Pos King::findBestMove() {
