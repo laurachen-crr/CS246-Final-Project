@@ -104,6 +104,7 @@ bool Grid::check() {
 
 // sets newPiece at (r, c)
 // this method does not clean up memory or validate!
+// use this for general purposes
 void Grid::setPiece(int r, int c, Piece* newPiece) {
     Piece* oldPiece = this->getPiece(r, c);
     this->removePiece(oldPiece);
@@ -121,6 +122,7 @@ void Grid::setPiece(int r, int c, Piece* newPiece) {
 // creates new piece at (r, c)
 // return true if validation passes, else false
 // this method cleans up memory and validates
+// ONLY use this for setup mode!!
 bool Grid::setPiece(Colour colour, int r, int c, Type type) {
     Piece* oldPiece = this->getPiece(r, c);
     Piece* newPiece = Piece::createPiece(r, c, colour, type);
@@ -162,7 +164,7 @@ Piece* Grid::findPiece(Type type, Colour colour) {
     return nullptr;
 }
 
-// remove piece from grid
+// remove piece from grid and vectors
 // this method does not clean up memory!
 void Grid::removePiece(Piece* piece) {
     for (unsigned int i = 0; i < this->black.size(); ++i) {
@@ -178,11 +180,10 @@ void Grid::removePiece(Piece* piece) {
     for (unsigned int i = 0; i < this->grid.size(); ++i) {
         for (unsigned int j = 0; j < this->grid.at(i).size(); ++j) {
             if (this->getPiece(i, j) == piece) {
-                this->grid.at(i).at(j).setPiece(nullptr);
+                this->grid.at(i).at(j).removePiece();
             }
         }
     }
-
 }
 
 // remove piece at (r, c) from grid
