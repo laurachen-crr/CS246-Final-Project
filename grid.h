@@ -35,8 +35,7 @@ class Grid : public Subject, public Observer {
     friend std::ostream &operator<<(std::ostream &out, const Grid &g);
     void notify(Subject &whoFrom) override;
     // piece: rnbqkpRNBQKP
-    Piece* getPiece(int r, int c);  // return the piece on the cell; if the cell is
-                                 // empty, return 'x'
+    Piece* getPiece(int r, int c);  // returns nullptr is there is no piece on it
 };
 
 #endif
