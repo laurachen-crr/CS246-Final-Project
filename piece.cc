@@ -33,6 +33,8 @@ Type Piece::getType() { return this->type; }
 
 Pos Piece::getPos() { return this->pos; }
 
+void Piece::setPos(int r, int c) { this->pos = {r, c}; }
+
 King::King(int row, int col, Colour colour)
     : Piece{row, col, colour, Type::King} {}
 

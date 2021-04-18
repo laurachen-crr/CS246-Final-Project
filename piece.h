@@ -17,6 +17,7 @@ public:
     Type getType();
     Colour getColour();
     Pos getPos();
+    void setPos(int r, int c);
     void MovePiece(int r, int c); // Move a piece of given colour here.
     void notify(Subject &whoFrom) override; // My observers will call this when they've changed state
     virtual Pos findBestMove() = 0;
