@@ -4,7 +4,8 @@
 #include "subject.h"
 #include "enums.h"
 #include "structs.h"
-
+#include <vector>
+using namespace std;
 class Grid;
 
 class Piece : public Subject, public Observer {
@@ -23,7 +24,7 @@ public:
     void notify(Subject &whoFrom) override; // My observers will call this when they've changed state
     virtual Pos findBestMove() = 0;
     virtual bool checkValidMove(int r, int c, Grid& g) = 0; // check if move to r, c is a valid move
-
+    virtual vector<Pos> getValidMoves(Grid& g) = 0;
 };
 
 class Queen : public Piece {
@@ -31,6 +32,7 @@ public:
     Queen(int row, int col, Colour);
     Pos findBestMove() override;
     bool checkValidMove(int r, int c, Grid& g) override;
+    vector<Pos> getValidMoves(Grid& g) override;
 };
 
 class King : public Piece {
@@ -38,14 +40,15 @@ public:
     King(int row, int col, Colour);
     Pos findBestMove() override;
     bool checkValidMove(int r, int c, Grid& g) override;
+    vector<Pos> getValidMoves(Grid& g) override;
 };
 
 class Pawn : public Piece {
-    bool firstMove = true;
 public:
     Pawn(int row, int col, Colour);
     Pos findBestMove() override;
     bool checkValidMove(int r, int c, Grid& g) override;
+    vector<Pos> getValidMoves(Grid& g) override;
 };
 
 class Bishop : public Piece {
@@ -53,7 +56,7 @@ public:
     Bishop(int row, int col, Colour);
     Pos findBestMove() override;
     bool checkValidMove(int r, int c, Grid& g) override;
-
+    vector<Pos> getValidMoves(Grid& g) override;
 };
 
 class Knight : public Piece {
@@ -61,6 +64,7 @@ public:
     Knight(int row, int col, Colour);
     Pos findBestMove() override;
     bool checkValidMove(int r, int c, Grid& g) override;
+    vector<Pos> getValidMoves(Grid& g) override;
 };
 
 class Rook : public Piece {
@@ -68,6 +72,7 @@ public:
     Rook(int row, int col, Colour);
     Pos findBestMove() override;   
     bool checkValidMove(int r, int c, Grid& g) override;   
+    vector<Pos> getValidMoves(Grid& g) override;
 };
 
 #endif
