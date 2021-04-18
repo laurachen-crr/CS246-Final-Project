@@ -71,7 +71,18 @@ bool Bishop::checkValidMove(int r, int c) {
 }
 
 bool Pawn::checkValidMove(int r, int c) {
-    
+    int oldR = this->getPos().row;
+    int oldC = this->getPos().col;
+    int rowdiff = this->getPos().row - r;
+    int coldiff = this->getPos().col - c;
+
+    if(oldR == 2){
+        if(c == oldR + 1 || rowdiff == oldR + 2){
+            return true;
+        } else{
+            return false;
+        }
+    }
 }
 
 bool Rook::checkValidMove(int r, int c) {
