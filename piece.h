@@ -14,7 +14,6 @@ class Piece : public Subject, public Observer {
     Type type;
     Pos pos;
     Colour colour;
-    virtual bool checkValidMove(int r, int c) = 0; // check if move to r, c is a valid move
 
 public: 
     Piece(int row, int col, Colour colour, Type type);
@@ -24,48 +23,52 @@ public:
     void MovePiece(int r, int c); // Move a piece of given colour here.
     void notify(Subject &whoFrom) override; // My observers will call this when they've changed state
     virtual Pos findBestMove() = 0;
+    virtual bool checkValidMove(int r, int c) = 0; // check if move to r, c is a valid move
+
 };
 
 class Queen : public Piece {
-    bool checkValidMove(int r, int c) override;
 public:
     Queen(int row, int col, Colour);
     Pos findBestMove() override;
+    bool checkValidMove(int r, int c) override;
 };
 
 class King : public Piece {
-    bool checkValidMove(int r, int c) override;
 public:
     King(int row, int col, Colour);
     Pos findBestMove() override;
+    bool checkValidMove(int r, int c) override;
 };
 
 class Pawn : public Piece {
-    bool checkValidMove(int r, int c) override;
+    bool firstMove = true;
 public:
     Pawn(int row, int col, Colour);
     Pos findBestMove() override;
+    bool checkValidMove(int r, int c) override;
 };
 
 class Bishop : public Piece {
-    bool checkValidMove(int r, int c) override;
 public:
     Bishop(int row, int col, Colour);
     Pos findBestMove() override;
+    bool checkValidMove(int r, int c) override;
+
 };
 
 class Knight : public Piece {
-    bool checkValidMove(int r, int c) override;
 public:
     Knight(int row, int col, Colour);
     Pos findBestMove() override;
+    bool checkValidMove(int r, int c) override;
 };
 
 class Rook : public Piece {
-    bool checkValidMove(int r, int c) override;
 public:
     Rook(int row, int col, Colour);
-    Pos findBestMove() override;             
+    Pos findBestMove() override;   
+    bool checkValidMove(int r, int c) override;   
 };
 
 #endif

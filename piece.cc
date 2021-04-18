@@ -71,7 +71,7 @@ bool Bishop::checkValidMove(int r, int c) {
 }
 
 bool Pawn::checkValidMove(int r, int c) {
-
+    
 }
 
 bool Rook::checkValidMove(int r, int c) {
@@ -108,7 +108,7 @@ bool Knight::checkValidMove(int r, int c) {
 }
 
 Pos King::findBestMove() {
-
+    
 }
 
 Pos Queen::findBestMove() {
