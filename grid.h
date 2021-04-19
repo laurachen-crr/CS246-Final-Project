@@ -28,7 +28,8 @@ class Grid : public Subject, public Observer {
     bool setPiece(Colour colour, int r, int c, Type type);
     void setPiece(int r, int c, Piece* newPiece);
     Piece* findPiece(Type type, Colour colour);
-    bool check();        // check whether one side is checked
+    Colour check();        // check whether one side is checked
+    Colour check(Piece* piece, Pos pos);
     void removePiece(Piece* piece);
     void removePiece(int r, int c);
     Result checkmate();  // check whether the game is over
