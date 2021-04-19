@@ -9,6 +9,7 @@ Cell::Cell(int r, int c) { this->pos = {r, c}; }
 // piece should NOT be nullptr (use removePiece if nullptr)
 void Cell::setPiece(Piece* piece) {
     assert(piece != nullptr);
+    this->removePiece();
     this->piece = piece;
     this->piece->setPos(this->pos.row, this->pos.col);
 }

@@ -2,6 +2,7 @@
 #include "textdisplay.h"
 #include "utils.h"
 #include "exception.h"
+#include "enums.h"
 
 Grid::Grid() {
     for(int i = 0; i < 8; ++i) {
@@ -106,8 +107,42 @@ bool Grid::move(Colour colour, int fromR, int fromC, int toR, int toC) {
     return true;
 }
 
-bool Grid::check() {
-    return false;
+// return if you move piece to pos results in a check
+Colour Grid::check(Piece* piece, Pos pos) {
+    Pos piecePos = piece->getPos();
+    Cell& pieceCell = this->getCell(piecePos.row, piecePos.col);
+    if (piecePos.col == pos.col && piecePos.row == pos.row) {
+        return this->check();
+    } else {
+        Piece* curPiece = this->getPiece(pos.row, pos.col);
+        Cell& curCell = this->getCell(pos.row, pos.col);
+        pieceCell.removePiece();
+        curCell.setPiece(piece);
+        Colour c = this->check();
+        curCell.setPiece(curPiece);
+        pieceCell.setPiece(piece);
+        return c;
+    }
+}
+
+// return if the current board has a check
+Colour Grid::check() {
+    Pos blackKingPos = this->findPiece(Type::King, Colour::Black)->getPos();
+    Pos whiteKingPos = this->findPiece(Type::King, Colour::White)->getPos();
+
+    for (auto p : this->white) {
+        vector<Pos> allPossibleMoves = p->getValidMoves(*this);
+        if (Utils::posInVector(allPossibleMoves, blackKingPos)) {
+            return Colour::Black;
+        }
+    }
+    for (auto p : this->black) {
+        vector<Pos> allPossibleMoves = p->getValidMoves(*this);
+        if (Utils::posInVector(allPossibleMoves, whiteKingPos)) {
+            return Colour::White;
+        }
+    }
+    return Colour::NoColour;
 }
 
 // sets newPiece at (r, c)
@@ -135,7 +170,7 @@ bool Grid::setPiece(Colour colour, int r, int c, Type type) {
     Piece* oldPiece = this->getPiece(r, c);
     Piece* newPiece = Piece::createPiece(r, c, colour, type);
     this->setPiece(r, c, newPiece);
-    if (this->check()) { // in check
+    if (this->check() != Colour::NoColour) { // in check
         this->setPiece(r, c, oldPiece);
         delete newPiece;
         return false;
