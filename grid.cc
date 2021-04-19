@@ -12,8 +12,8 @@ Grid::Grid() {
     this->black.emplace_back(Piece::createPiece(7, 0, Colour::Black, Type::Rook));
     this->black.emplace_back(Piece::createPiece(7, 1, Colour::Black, Type::Knight));
     this->black.emplace_back(Piece::createPiece(7, 2, Colour::Black, Type::Bishop));
-    this->black.emplace_back(Piece::createPiece(7, 3, Colour::Black, Type::Knight));
-    this->black.emplace_back(Piece::createPiece(7, 4, Colour::Black, Type::Queen));
+    this->black.emplace_back(Piece::createPiece(7, 3, Colour::Black, Type::Queen));
+    this->black.emplace_back(Piece::createPiece(7, 4, Colour::Black, Type::King));
     this->black.emplace_back(Piece::createPiece(7, 5, Colour::Black, Type::Bishop));
     this->black.emplace_back(Piece::createPiece(7, 6, Colour::Black, Type::Knight));
     this->black.emplace_back(Piece::createPiece(7, 7, Colour::Black, Type::Rook));
@@ -21,8 +21,8 @@ Grid::Grid() {
     this->white.emplace_back(Piece::createPiece(0, 0, Colour::White, Type::Rook));
     this->white.emplace_back(Piece::createPiece(0, 1, Colour::White, Type::Knight));
     this->white.emplace_back(Piece::createPiece(0, 2, Colour::White, Type::Bishop));
-    this->white.emplace_back(Piece::createPiece(0, 3, Colour::White, Type::King));
-    this->white.emplace_back(Piece::createPiece(0, 4, Colour::White, Type::Queen));
+    this->white.emplace_back(Piece::createPiece(0, 3, Colour::White, Type::Queen));
+    this->white.emplace_back(Piece::createPiece(0, 4, Colour::White, Type::King));
     this->white.emplace_back(Piece::createPiece(0, 5, Colour::White, Type::Bishop));
     this->white.emplace_back(Piece::createPiece(0, 6, Colour::White, Type::Knight));
     this->white.emplace_back(Piece::createPiece(0, 7, Colour::White, Type::Rook));
