@@ -1,6 +1,7 @@
 #include "utils.h"
-
 #include "piece.h"
+#include <vector>
+using namespace std;
 
 bool Utils::onBoard(int r, int c) {
     if (r < 8 && r >= 0 && c < 8 && c >=0) {
@@ -8,6 +9,15 @@ bool Utils::onBoard(int r, int c) {
     } else {
         return false;
     }
+}
+
+bool Utils::posInVector(vector<Pos>& v, Pos pos) {
+    for (auto p : v) {
+        if (p.row == pos.row && p.col == pos.col) {
+            return true;
+        }
+    }
+    return false;
 }
 
 char Utils::pieceToChar(Piece* piece) {

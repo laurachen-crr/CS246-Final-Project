@@ -1,7 +1,8 @@
 #include "piece.h"
-
 #include "grid.h"
 #include "utils.h"
+#include <vector>
+using namespace std;
 
 // helper for rook 
 int validMove(Grid& g, int atR, int atC, Colour colour) {
@@ -71,19 +72,41 @@ Rook::Rook(int row, int col, Colour colour)
 Knight::Knight(int row, int col, Colour colour)
     : Piece{row, col, colour, Type::Knight} {}
 
-bool King::checkValidMove(int r, int c, Grid& g) {  // need modification
+bool King::checkValidMove(int r, int c, Grid& g) { 
+    Pos destination = {r, c};
+    vector<Pos> allValidMoves = this->getValidMoves(g);
+    return Utils::posInVector(allValidMoves, destination);
 }
 
-bool Queen::checkValidMove(int r, int c, Grid& g) {  // need modification
+bool Queen::checkValidMove(int r, int c, Grid& g) { 
+    Pos destination = {r, c};
+    vector<Pos> allValidMoves = this->getValidMoves(g);
+    return Utils::posInVector(allValidMoves, destination); 
 }
 
-bool Bishop::checkValidMove(int r, int c, Grid& g) {}
+bool Bishop::checkValidMove(int r, int c, Grid& g) {
+    Pos destination = {r, c};
+    vector<Pos> allValidMoves = this->getValidMoves(g);
+    return Utils::posInVector(allValidMoves, destination);
+}
 
-bool Pawn::checkValidMove(int r, int c, Grid& g) {}
+bool Pawn::checkValidMove(int r, int c, Grid& g) {
+    Pos destination = {r, c};
+    vector<Pos> allValidMoves = this->getValidMoves(g);
+    return Utils::posInVector(allValidMoves, destination);
+}
 
-bool Rook::checkValidMove(int r, int c, Grid& g) {}
+bool Rook::checkValidMove(int r, int c, Grid& g) {
+    Pos destination = {r, c};
+    vector<Pos> allValidMoves = this->getValidMoves(g);
+    return Utils::posInVector(allValidMoves, destination);
+}
 
-bool Knight::checkValidMove(int r, int c, Grid& g) {}
+bool Knight::checkValidMove(int r, int c, Grid& g) {
+    Pos destination = {r, c};
+    vector<Pos> allValidMoves = this->getValidMoves(g);
+    return Utils::posInVector(allValidMoves, destination);
+}
 
 vector<Pos> King::getValidMoves(Grid& g) {
     vector<Pos> allValidMoves;
