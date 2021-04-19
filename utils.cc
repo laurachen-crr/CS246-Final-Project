@@ -2,6 +2,14 @@
 
 #include "piece.h"
 
+bool Utils::onBoard(int r, int c) {
+    if (r < 8 && r >= 0 && c < 8 && c >=0) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 char Utils::pieceToChar(Piece* piece) {
     if (piece == nullptr) {
         return 'x';
