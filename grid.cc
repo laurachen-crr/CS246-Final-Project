@@ -90,6 +90,9 @@ bool Grid::move(Colour colour, int fromR, int fromC, int toR, int toC) {
     }
 
     // Check for valid move
+    if (!(this->getPiece(fromR,fromC)->checkValidMove(toR,toC,*this))) {
+        return false;
+    }
 
     // Check for checkmate
 
