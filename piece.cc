@@ -1,6 +1,21 @@
 #include "piece.h"
 #include "grid.h"
 
+// helper for rook 
+int validMove(Grid& g, int atR, int atC, Colour colour) {
+    Piece* currPiece = g.getPiece(atR, atC);
+    if (currPiece == nullptr) { // no piece at cell
+        return 0; // legal move
+    } else {
+        Colour currColour = currPiece->getColour(); // get colour of piece at cell atR, atC
+        if (colour == currColour) {  // colour of atR,atC is the same as piece in question
+            return 1; // illegal
+        } else {
+            return 2; // legal but stop here
+        }
+    }
+}
+
 Piece::Piece(int row, int col, Colour colour, Type type) {
     this->pos = {row, col};
     this->colour = colour;
@@ -59,7 +74,7 @@ bool King::checkValidMove(int r, int c, Grid& g) { // need modification
 }
 
 bool Queen::checkValidMove(int r, int c, Grid& g) { // need modification
-    
+
 }
 
 bool Bishop::checkValidMove(int r, int c, Grid& g) {
@@ -83,10 +98,215 @@ vector<Pos> King::getValidMoves(Grid& g) {
 }
 
 vector<Pos> Queen::getValidMoves(Grid& g) {
+    vector<Pos> validMoves;
+    int currR = this->getPos().row;
+    int currC = this->getPos().col;
+    Colour colour = this->getColour();
 
+    // find top right diag
+    int tempR = currR + 1;
+    int tempC = currC + 1;
+    while (tempC <= 7 && tempR <= 7) {
+        int moveStatus = validMove(g, tempR, tempC, colour);
+        if (moveStatus == 0) {
+            validMoves.push_back(Pos{tempR, tempC});
+        } else if (moveStatus == 1) {
+            break;
+        } else {
+            validMoves.push_back(Pos{tempR, tempC});
+            break;
+        }
+        tempR += 1;
+        tempC += 1;
+    }
+
+    // find bottom right diag
+    tempR = currR - 1;
+    tempC = currC + 1;
+    while (tempC <= 7 && tempR >= 0) {
+        int moveStatus = validMove(g, tempR, tempC, colour);
+        if (moveStatus == 0) {
+            validMoves.push_back(Pos{tempR, tempC});
+        } else if (moveStatus == 1) {
+            break;
+        } else {
+            validMoves.push_back(Pos{tempR, tempC});
+            break;
+        }
+        tempR -= 1;
+        tempC += 1;
+    }
+
+    // find bottom left diag
+    tempR = currR - 1;
+    tempC = currC - 1;
+    while (tempC >= 0 && tempR >= 0) {
+        int moveStatus = validMove(g, tempR, tempC, colour);
+        if (moveStatus == 0) {
+            validMoves.push_back(Pos{tempR, tempC});
+        } else if (moveStatus == 1) {
+            break;
+        } else {
+            validMoves.push_back(Pos{tempR, tempC});
+            break;
+        }
+        tempR -= 1;
+        tempC -= 1;
+    }
+
+    // find top left diag
+    tempR = currR + 1;
+    tempC = currC - 1;
+    while (tempC >= 0 && tempR <= 7) {
+        int moveStatus = validMove(g, tempR, tempC, colour);
+        if (moveStatus == 0) {
+            validMoves.push_back(Pos{tempR, tempC});
+        } else if (moveStatus == 1) {
+            break;
+        } else {
+            validMoves.push_back(Pos{tempR, tempC});
+            break;
+        }
+        tempR += 1;
+        tempC -= 1;
+    }
+
+    tempR = currR + 1;
+    // find moves forward
+    while (tempR <= 7) {
+        int moveStatus = validMove(g, tempR, currC, colour);
+        if (moveStatus == 0) {
+            validMoves.push_back(Pos{tempR, currC});
+        } else if (moveStatus == 1) {
+            break;
+        } else {
+            validMoves.push_back(Pos{tempR, currC});
+            break;
+        }
+        tempR += 1;
+    }
+
+    tempR = currR - 1;
+    // find moves backward
+    while (tempR >= 0) {
+        int moveStatus = validMove(g, tempR, currC, colour);
+        if (moveStatus == 0) {
+            validMoves.push_back(Pos{tempR, currC});
+        } else if (moveStatus == 1) {
+            break;
+        } else {
+            validMoves.push_back(Pos{tempR, currC});
+            break;
+        }
+        tempR -= 1;
+    }
+
+    tempC = currC + 1;
+    // find moves to the right
+    while (tempC <= 7) {
+        int moveStatus = validMove(g, currR, tempC, colour);
+        if (moveStatus == 0) {
+            validMoves.push_back(Pos{currR, tempC});
+        } else if (moveStatus == 1) {
+            break;
+        } else {
+            validMoves.push_back(Pos{currR, tempC});
+            break;
+        }
+        tempC += 1;
+    }
+
+    tempC = currC - 1;
+    // find moves to the left
+    while (tempC >= 0) {
+        int moveStatus = validMove(g, currR, tempC, colour);
+        if (moveStatus == 0) {
+            validMoves.push_back(Pos{currR, tempC});
+        } else if (moveStatus == 1) {
+            break;
+        } else {
+            validMoves.push_back(Pos{currR, tempC});
+            break;
+        }
+        tempC -= 1;
+    }
+    return validMoves;
 }
 
 vector<Pos> Bishop::getValidMoves(Grid& g) {
+    vector<Pos> validMoves;
+    int currR = this->getPos().row;
+    int currC = this->getPos().col;
+    Colour colour = this->getColour();
+
+    // find top right diag
+    int tempR = currR + 1;
+    int tempC = currC + 1;
+    while (tempC <= 7 && tempR <= 7) {
+        int moveStatus = validMove(g, tempR, tempC, colour);
+        if (moveStatus == 0) {
+            validMoves.push_back(Pos{tempR, tempC});
+        } else if (moveStatus == 1) {
+            break;
+        } else {
+            validMoves.push_back(Pos{tempR, tempC});
+            break;
+        }
+        tempR += 1;
+        tempC += 1;
+    }
+
+    // find bottom right diag
+    tempR = currR - 1;
+    tempC = currC + 1;
+    while (tempC <= 7 && tempR >= 0) {
+        int moveStatus = validMove(g, tempR, tempC, colour);
+        if (moveStatus == 0) {
+            validMoves.push_back(Pos{tempR, tempC});
+        } else if (moveStatus == 1) {
+            break;
+        } else {
+            validMoves.push_back(Pos{tempR, tempC});
+            break;
+        }
+        tempR -= 1;
+        tempC += 1;
+    }
+
+    // find bottom left diag
+    tempR = currR - 1;
+    tempC = currC - 1;
+    while (tempC >= 0 && tempR >= 0) {
+        int moveStatus = validMove(g, tempR, tempC, colour);
+        if (moveStatus == 0) {
+            validMoves.push_back(Pos{tempR, tempC});
+        } else if (moveStatus == 1) {
+            break;
+        } else {
+            validMoves.push_back(Pos{tempR, tempC});
+            break;
+        }
+        tempR -= 1;
+        tempC -= 1;
+    }
+
+    // find top left diag
+    tempR = currR + 1;
+    tempC = currC - 1;
+    while (tempC >= 0 && tempR <= 7) {
+        int moveStatus = validMove(g, tempR, tempC, colour);
+        if (moveStatus == 0) {
+            validMoves.push_back(Pos{tempR, tempC});
+        } else if (moveStatus == 1) {
+            break;
+        } else {
+            validMoves.push_back(Pos{tempR, tempC});
+            break;
+        }
+        tempR += 1;
+        tempC -= 1;
+    }
+    return validMoves;
 
 }
 
@@ -99,7 +319,71 @@ vector<Pos> Knight::getValidMoves(Grid& g) {
 }
 
 vector<Pos> Rook::getValidMoves(Grid& g) {
+    vector<Pos> validMoves;
+    int currR = this->getPos().row;
+    int currC = this->getPos().col;
+    Colour colour = this->getColour();
 
+    int tempR = currR + 1;
+    // find moves forward
+    while (tempR <= 7) {
+        int moveStatus = validMove(g, tempR, currC, colour);
+        if (moveStatus == 0) {
+            validMoves.push_back(Pos{tempR, currC});
+        } else if (moveStatus == 1) {
+            break;
+        } else {
+            validMoves.push_back(Pos{tempR, currC});
+            break;
+        }
+        tempR += 1;
+    }
+
+    tempR = currR - 1;
+    // find moves backward
+    while (tempR >= 0) {
+        int moveStatus = validMove(g, tempR, currC, colour);
+        if (moveStatus == 0) {
+            validMoves.push_back(Pos{tempR, currC});
+        } else if (moveStatus == 1) {
+            break;
+        } else {
+            validMoves.push_back(Pos{tempR, currC});
+            break;
+        }
+        tempR -= 1;
+    }
+
+    int tempC = currC + 1;
+    // find moves to the right
+    while (tempC <= 7) {
+        int moveStatus = validMove(g, currR, tempC, colour);
+        if (moveStatus == 0) {
+            validMoves.push_back(Pos{currR, tempC});
+        } else if (moveStatus == 1) {
+            break;
+        } else {
+            validMoves.push_back(Pos{currR, tempC});
+            break;
+        }
+        tempC += 1;
+    }
+
+    tempC = currC - 1;
+    // find moves to the left
+    while (tempC >= 0) {
+        int moveStatus = validMove(g, currR, tempC, colour);
+        if (moveStatus == 0) {
+            validMoves.push_back(Pos{currR, tempC});
+        } else if (moveStatus == 1) {
+            break;
+        } else {
+            validMoves.push_back(Pos{currR, tempC});
+            break;
+        }
+        tempC -= 1;
+    }
+    return validMoves;
 }
 
 Pos King::findBestMove() {}
