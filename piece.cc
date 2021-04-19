@@ -120,7 +120,9 @@ vector<Pos> King::getValidMoves(Grid& g) {
                 Piece* piece = g.getPiece(r + row, c + col);
                 if (piece == nullptr || piece->getColour() != colour) {
                     Pos pos = {r + row, c + col};
-                    allValidMoves.emplace_back(pos);
+                    if (g.check(this,pos) != colour) {
+                        allValidMoves.emplace_back(pos);
+                    }
                 }
             }
         }
@@ -140,11 +142,17 @@ vector<Pos> Queen::getValidMoves(Grid& g) {
     while (tempC <= 7 && tempR <= 7) {
         int moveStatus = validMove(g, tempR, tempC, colour);
         if (moveStatus == 0) {
-            validMoves.push_back(Pos{tempR, tempC});
+            if (g.check(this, Pos{tempR, tempC}) != colour) {
+                validMoves.push_back(Pos{tempR, tempC});
+            } else {
+                continue;
+            }
         } else if (moveStatus == 1) {
             break;
         } else {
-            validMoves.push_back(Pos{tempR, tempC});
+            if (g.check(this, Pos{tempR, tempC}) != colour) {
+                validMoves.push_back(Pos{tempR, tempC});
+            }
             break;
         }
         tempR += 1;
@@ -157,11 +165,17 @@ vector<Pos> Queen::getValidMoves(Grid& g) {
     while (tempC <= 7 && tempR >= 0) {
         int moveStatus = validMove(g, tempR, tempC, colour);
         if (moveStatus == 0) {
-            validMoves.push_back(Pos{tempR, tempC});
+            if (g.check(this, Pos{tempR, tempC}) != colour) {
+                validMoves.push_back(Pos{tempR, tempC});
+            } else {
+                continue;
+            }
         } else if (moveStatus == 1) {
             break;
         } else {
-            validMoves.push_back(Pos{tempR, tempC});
+            if (g.check(this, Pos{tempR, tempC}) != colour) {
+                validMoves.push_back(Pos{tempR, tempC});
+            }
             break;
         }
         tempR -= 1;
@@ -172,13 +186,19 @@ vector<Pos> Queen::getValidMoves(Grid& g) {
     tempR = currR - 1;
     tempC = currC - 1;
     while (tempC >= 0 && tempR >= 0) {
-        int moveStatus = validMove(g, tempR, tempC, colour);
+       int moveStatus = validMove(g, tempR, tempC, colour);
         if (moveStatus == 0) {
-            validMoves.push_back(Pos{tempR, tempC});
+            if (g.check(this, Pos{tempR, tempC}) != colour) {
+                validMoves.push_back(Pos{tempR, tempC});
+            } else {
+                continue;
+            }
         } else if (moveStatus == 1) {
             break;
         } else {
-            validMoves.push_back(Pos{tempR, tempC});
+            if (g.check(this, Pos{tempR, tempC}) != colour) {
+                validMoves.push_back(Pos{tempR, tempC});
+            }
             break;
         }
         tempR -= 1;
@@ -191,11 +211,17 @@ vector<Pos> Queen::getValidMoves(Grid& g) {
     while (tempC >= 0 && tempR <= 7) {
         int moveStatus = validMove(g, tempR, tempC, colour);
         if (moveStatus == 0) {
-            validMoves.push_back(Pos{tempR, tempC});
+            if (g.check(this, Pos{tempR, tempC}) != colour) {
+                validMoves.push_back(Pos{tempR, tempC});
+            } else {
+                continue;
+            }
         } else if (moveStatus == 1) {
             break;
         } else {
-            validMoves.push_back(Pos{tempR, tempC});
+            if (g.check(this, Pos{tempR, tempC}) != colour) {
+                validMoves.push_back(Pos{tempR, tempC});
+            }
             break;
         }
         tempR += 1;
@@ -207,11 +233,17 @@ vector<Pos> Queen::getValidMoves(Grid& g) {
     while (tempR <= 7) {
         int moveStatus = validMove(g, tempR, currC, colour);
         if (moveStatus == 0) {
-            validMoves.push_back(Pos{tempR, currC});
+            if (g.check(this,Pos{tempR, currC}) != colour) {
+                validMoves.push_back(Pos{tempR, currC});
+            } else {
+                continue;
+            }
         } else if (moveStatus == 1) {
             break;
         } else {
-            validMoves.push_back(Pos{tempR, currC});
+            if (g.check(this,Pos{tempR, currC}) != colour) {
+                validMoves.push_back(Pos{tempR, currC});
+            }
             break;
         }
         tempR += 1;
@@ -222,11 +254,17 @@ vector<Pos> Queen::getValidMoves(Grid& g) {
     while (tempR >= 0) {
         int moveStatus = validMove(g, tempR, currC, colour);
         if (moveStatus == 0) {
-            validMoves.push_back(Pos{tempR, currC});
+            if (g.check(this,Pos{tempR, currC}) != colour) {
+                validMoves.push_back(Pos{tempR, currC});
+            } else {
+                continue;
+            }
         } else if (moveStatus == 1) {
             break;
         } else {
-            validMoves.push_back(Pos{tempR, currC});
+            if (g.check(this,Pos{tempR, currC}) != colour) {
+                validMoves.push_back(Pos{tempR, currC});
+            }
             break;
         }
         tempR -= 1;
@@ -237,11 +275,17 @@ vector<Pos> Queen::getValidMoves(Grid& g) {
     while (tempC <= 7) {
         int moveStatus = validMove(g, currR, tempC, colour);
         if (moveStatus == 0) {
-            validMoves.push_back(Pos{currR, tempC});
+            if (g.check(this,Pos{currR,tempC}) != colour) {
+                validMoves.push_back(Pos{currR, tempC});
+            } else {
+                continue;
+            }
         } else if (moveStatus == 1) {
             break;
         } else {
-            validMoves.push_back(Pos{currR, tempC});
+            if (g.check(this, Pos{currR,tempC}) != colour) {
+                validMoves.push_back(Pos{currR, tempC});
+            }
             break;
         }
         tempC += 1;
@@ -252,11 +296,17 @@ vector<Pos> Queen::getValidMoves(Grid& g) {
     while (tempC >= 0) {
         int moveStatus = validMove(g, currR, tempC, colour);
         if (moveStatus == 0) {
-            validMoves.push_back(Pos{currR, tempC});
+            if (g.check(this,Pos{currR,tempC}) != colour) {
+                validMoves.push_back(Pos{currR, tempC});
+            } else {
+                continue;
+            }
         } else if (moveStatus == 1) {
             break;
         } else {
-            validMoves.push_back(Pos{currR, tempC});
+            if (g.check(this, Pos{currR,tempC}) != colour) {
+                validMoves.push_back(Pos{currR, tempC});
+            }
             break;
         }
         tempC -= 1;
@@ -276,11 +326,17 @@ vector<Pos> Bishop::getValidMoves(Grid& g) {
     while (tempC <= 7 && tempR <= 7) {
         int moveStatus = validMove(g, tempR, tempC, colour);
         if (moveStatus == 0) {
-            validMoves.push_back(Pos{tempR, tempC});
+            if (g.check(this, Pos{tempR, tempC}) != colour) {
+                validMoves.push_back(Pos{tempR, tempC});
+            } else {
+                continue;
+            }
         } else if (moveStatus == 1) {
             break;
         } else {
-            validMoves.push_back(Pos{tempR, tempC});
+            if (g.check(this, Pos{tempR, tempC}) != colour) {
+                validMoves.push_back(Pos{tempR, tempC});
+            }
             break;
         }
         tempR += 1;
@@ -293,11 +349,17 @@ vector<Pos> Bishop::getValidMoves(Grid& g) {
     while (tempC <= 7 && tempR >= 0) {
         int moveStatus = validMove(g, tempR, tempC, colour);
         if (moveStatus == 0) {
-            validMoves.push_back(Pos{tempR, tempC});
+            if (g.check(this, Pos{tempR, tempC}) != colour) {
+                validMoves.push_back(Pos{tempR, tempC});
+            } else {
+                continue;
+            }
         } else if (moveStatus == 1) {
             break;
         } else {
-            validMoves.push_back(Pos{tempR, tempC});
+            if (g.check(this, Pos{tempR, tempC}) != colour) {
+                validMoves.push_back(Pos{tempR, tempC});
+            }
             break;
         }
         tempR -= 1;
@@ -308,13 +370,19 @@ vector<Pos> Bishop::getValidMoves(Grid& g) {
     tempR = currR - 1;
     tempC = currC - 1;
     while (tempC >= 0 && tempR >= 0) {
-        int moveStatus = validMove(g, tempR, tempC, colour);
+       int moveStatus = validMove(g, tempR, tempC, colour);
         if (moveStatus == 0) {
-            validMoves.push_back(Pos{tempR, tempC});
+            if (g.check(this, Pos{tempR, tempC}) != colour) {
+                validMoves.push_back(Pos{tempR, tempC});
+            } else {
+                continue;
+            }
         } else if (moveStatus == 1) {
             break;
         } else {
-            validMoves.push_back(Pos{tempR, tempC});
+            if (g.check(this, Pos{tempR, tempC}) != colour) {
+                validMoves.push_back(Pos{tempR, tempC});
+            }
             break;
         }
         tempR -= 1;
@@ -327,11 +395,17 @@ vector<Pos> Bishop::getValidMoves(Grid& g) {
     while (tempC >= 0 && tempR <= 7) {
         int moveStatus = validMove(g, tempR, tempC, colour);
         if (moveStatus == 0) {
-            validMoves.push_back(Pos{tempR, tempC});
+            if (g.check(this, Pos{tempR, tempC}) != colour) {
+                validMoves.push_back(Pos{tempR, tempC});
+            } else {
+                continue;
+            }
         } else if (moveStatus == 1) {
             break;
         } else {
-            validMoves.push_back(Pos{tempR, tempC});
+            if (g.check(this, Pos{tempR, tempC}) != colour) {
+                validMoves.push_back(Pos{tempR, tempC});
+            }
             break;
         }
         tempR += 1;
@@ -344,47 +418,64 @@ vector<Pos> Bishop::getValidMoves(Grid& g) {
 vector<Pos> Pawn::getValidMoves(Grid& g) {
     int row = this->getPos().row;
     int col = this->getPos().col;
+    Colour colour = this->getColour();
     vector<Pos> allValidMoves;
 
     if(this->getColour() == Colour::White) {
         if(row != 0) {
             if(g.getPiece(row-1, col) == nullptr) {
-                allValidMoves.push_back({row-1, col});
+                if (g.check(this, Pos{row-1,col}) != colour) {
+                    allValidMoves.push_back({row-1, col});
+                }
             }
 
             if(Utils::onBoard(row-1, col+1)) {
                 if(g.getPiece(row-1, col+1) != nullptr && g.getPiece(row-1, col+1)->getColour() == Colour::Black) {
-                    allValidMoves.push_back({row-1, col+1});
+                    if (g.check(this, Pos{row-1,col+1}) != colour) {
+                        allValidMoves.push_back({row-1, col+1});
+                    }
                 }
             } else if(Utils::onBoard(row-1, col-1)) {
                 if(g.getPiece(row-1, col-1) != nullptr && g.getPiece(row-1, col-1)->getColour() == Colour::Black) {
-                    allValidMoves.push_back({row-1, col-1});
+                    if (g.check(this, Pos{row-1,col-1}) != colour) {
+                        allValidMoves.push_back({row-1, col-1});
+                    }
                 }
             }
             if(row == 6) {
                 if(g.getPiece(4, col) == nullptr) {
-                    allValidMoves.push_back({4, col});
+                    if (g.check(this, Pos{4,col}) != colour) {
+                        allValidMoves.push_back({4, col});
+                    }
                 } 
             }
         }
     } else {
         if(row != 7) {
             if(g.getPiece(row+1, col) == nullptr) {
-                allValidMoves.push_back({row+1, col});
+                if (g.check(this, Pos{row+1,col}) != colour) {
+                    allValidMoves.push_back({row+1, col});
+                }
             }
             
             if(Utils::onBoard(row+1, col+1)) {
                 if(g.getPiece(row+1, col+1) != nullptr && g.getPiece(row+1, col+1)->getColour() == Colour::White) {
-                    allValidMoves.push_back({row+1, col+1});
+                    if (g.check(this, Pos{row+1,col+1}) != colour) {
+                        allValidMoves.push_back({row+1, col+1});
+                    }
                 }
             } else if(Utils::onBoard(row+1, col-1)) {
                 if(g.getPiece(row+1, col-1) != nullptr && g.getPiece(row+1, col-1)->getColour() == Colour::White) {
-                    allValidMoves.push_back({row+1, col-1});
+                    if (g.check(this, Pos{row+1,col-1}) != colour) {
+                        allValidMoves.push_back({row+1, col-1});
+                    }
                 }
             }
             if(row == 1) {
                 if(g.getPiece(3, col) == nullptr) {
-                    allValidMoves.push_back({3, col});
+                    if (g.check(this, Pos{3,col}) != colour) {
+                        allValidMoves.push_back({3, col});
+                    }
                 }
                 
             }
@@ -393,29 +484,38 @@ vector<Pos> Pawn::getValidMoves(Grid& g) {
     return allValidMoves;
 }
 
-vector<Pos> Knight::getValidMoves(Grid& g) {
+vector<Pos> Knight::getValidMoves(Grid& g) { // STILL HAVE TO ADD CHECK IN THIS
     int row = this->getPos().row;
     int col = this->getPos().col;
+    Colour colour = this->getColour();
     vector<Pos> allValidMoves;
 
     if(Utils::onBoard(row+2, col+1)) {
         allValidMoves.push_back({row+2, col+1});
         if(g.getPiece(row+2, col+1) != nullptr && g.getPiece(row+2, col+1)->getColour() == this->getColour()) {
             allValidMoves.pop_back();
+        } else if (g.check(this, Pos{row+2,col+1}) != colour) {
+            allValidMoves.pop_back();
         }
     } else if(Utils::onBoard(row-2, col+1)) {
         allValidMoves.push_back({row-2, col+1});
         if(g.getPiece(row-2, col+1) != nullptr && g.getPiece(row-2, col+1)->getColour() == this->getColour()) {
+            allValidMoves.pop_back();
+        } else if (g.check(this, Pos{row-2,col+1}) != colour) {
             allValidMoves.pop_back();
         }
     } else if(Utils::onBoard(row+2, col-1)) {
         allValidMoves.push_back({row+2, col-1});
         if(g.getPiece(row+2, col-1) != nullptr && g.getPiece(row+2, col-1)->getColour() == this->getColour()) {
             allValidMoves.pop_back();
+        } else if (g.check(this, Pos{row+2,col-1}) != colour) {
+            allValidMoves.pop_back();
         }
     } else if(Utils::onBoard(row-2, col-1)) {
         allValidMoves.push_back({row-2, col-1});
         if(g.getPiece(row-2, col-1) != nullptr && g.getPiece(row-2, col-1)->getColour() == this->getColour()) {
+            allValidMoves.pop_back();
+        } else if (g.check(this, Pos{row-2,col-1}) != colour) {
             allValidMoves.pop_back();
         }
     }
@@ -433,11 +533,17 @@ vector<Pos> Rook::getValidMoves(Grid& g) {
     while (tempR <= 7) {
         int moveStatus = validMove(g, tempR, currC, colour);
         if (moveStatus == 0) {
-            validMoves.push_back(Pos{tempR, currC});
+            if (g.check(this,Pos{tempR, currC}) != colour) {
+                validMoves.push_back(Pos{tempR, currC});
+            } else {
+                continue;
+            }
         } else if (moveStatus == 1) {
             break;
         } else {
-            validMoves.push_back(Pos{tempR, currC});
+            if (g.check(this,Pos{tempR, currC}) != colour) {
+                validMoves.push_back(Pos{tempR, currC});
+            }
             break;
         }
         tempR += 1;
@@ -448,11 +554,17 @@ vector<Pos> Rook::getValidMoves(Grid& g) {
     while (tempR >= 0) {
         int moveStatus = validMove(g, tempR, currC, colour);
         if (moveStatus == 0) {
-            validMoves.push_back(Pos{tempR, currC});
+            if (g.check(this,Pos{tempR, currC}) != colour) {
+                validMoves.push_back(Pos{tempR, currC});
+            } else {
+                continue;
+            }
         } else if (moveStatus == 1) {
             break;
         } else {
-            validMoves.push_back(Pos{tempR, currC});
+            if (g.check(this,Pos{tempR, currC}) != colour) {
+                validMoves.push_back(Pos{tempR, currC});
+            }
             break;
         }
         tempR -= 1;
@@ -463,11 +575,17 @@ vector<Pos> Rook::getValidMoves(Grid& g) {
     while (tempC <= 7) {
         int moveStatus = validMove(g, currR, tempC, colour);
         if (moveStatus == 0) {
-            validMoves.push_back(Pos{currR, tempC});
+            if (g.check(this,Pos{currR,tempC}) != colour) {
+                validMoves.push_back(Pos{currR, tempC});
+            } else {
+                continue;
+            }
         } else if (moveStatus == 1) {
             break;
         } else {
-            validMoves.push_back(Pos{currR, tempC});
+            if (g.check(this, Pos{currR,tempC}) != colour) {
+                validMoves.push_back(Pos{currR, tempC});
+            }
             break;
         }
         tempC += 1;
@@ -478,11 +596,17 @@ vector<Pos> Rook::getValidMoves(Grid& g) {
     while (tempC >= 0) {
         int moveStatus = validMove(g, currR, tempC, colour);
         if (moveStatus == 0) {
-            validMoves.push_back(Pos{currR, tempC});
+            if (g.check(this,Pos{currR,tempC}) != colour) {
+                validMoves.push_back(Pos{currR, tempC});
+            } else {
+                continue;
+            }
         } else if (moveStatus == 1) {
             break;
         } else {
-            validMoves.push_back(Pos{currR, tempC});
+            if (g.check(this, Pos{currR,tempC}) != colour) {
+                validMoves.push_back(Pos{currR, tempC});
+            }
             break;
         }
         tempC -= 1;
