@@ -6,6 +6,7 @@
 #include "structs.h"
 #include <vector>
 using namespace std;
+
 class Grid;
 
 class Piece : public Subject, public Observer {

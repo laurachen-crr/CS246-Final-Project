@@ -1,7 +1,9 @@
 #ifndef UTILS_H
 #define UTILS_H
-
 #include "enums.h"
+#include "structs.h"
+#include <vector>
+using namespace std;
 
 class Piece;
 
@@ -11,6 +13,7 @@ class Utils {
     static char pieceToChar(Piece* piece);
     static Type charToType(char c);
     static Colour charToColour(char c);
+    static bool posInVector(vector<Pos>& v, Pos pos);
 };
 
 #endif
