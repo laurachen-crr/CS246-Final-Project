@@ -277,7 +277,6 @@ vector<Piece*>& Grid::getPieces(Colour colour) {
 }
 
 // return the state of the game
-// NEED TO ADD: check for stalemate
 Result Grid::checkmate() {
     Piece* king;
     Colour colour;
@@ -287,40 +286,43 @@ Result Grid::checkmate() {
     } else if (this->check(Colour::Black)) {
         colour = Colour::Black;
         king = this->findPiece(Type::King, Colour::Black);
-        ;
     } else {
-        return Result::InGame;
-    }
-
-    // check if king has valid moves to avoid check
-    vector<Pos> moves = king->getValidMoves(*this);
-    for (auto pos : moves) {
-        if (!this->check(king, pos)) {
-            return Result::InGame;
+        // check if stalemate
+        for (auto piece : this->black) {
+            vector<Pos> moves = piece->getValidMoves(*this);
+            if (moves.size() != 0) {
+                return Result::InGame;
+            }
         }
+
+        for (auto piece : this->white) {
+            vector<Pos> moves = piece->getValidMoves(*this);
+            if (moves.size() != 0) {
+                return Result::InGame;
+            }
+        }
+
+        return Result::Stalemate;
     }
 
-    // get the piece(s) currently putting the king in check
+    // check if there's any move that can avoid check (ie. try all possible moves)
     vector<Piece*>& pieces = this->getPieces(Utils::opponent(colour));
-    vector<Piece*> checks;
 
     for (auto piece : pieces) {
-        moves = piece->getValidMoves(*this);
-        if (Utils::posInVector(moves, king->getPos())) {
-            checks.emplace_back(piece);
+        vector<Pos> moves = piece->getValidMoves(*this);
+        for (auto pos : moves) {
+            if (!this->check(piece, pos)) {
+                return Result::InGame; 
+            }
         }
     }
 
-    // if there are more then one piece keeping king in check, it is a checkmate
-    if (checks.size() != 1) {
-        if (colour == Colour::White) {
-            return Result::BlackWin;
-        } else {
-            return Result::WhiteWin;
-        }
+    // checkmate
+    if (colour == Colour::White) {
+        return Result::BlackWin;
+    } else {
+        return Result::WhiteWin;
     }
-
-    // check if there's any piece that can block for the king
 }
 
 void Grid::notify(Subject& whoFrom) {
