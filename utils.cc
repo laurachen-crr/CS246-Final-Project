@@ -3,6 +3,10 @@
 #include <vector>
 using namespace std;
 
+Colour Utils::opponent(Colour colour) {
+    return colour == Colour::White ? Colour::Black : Colour::White;
+}
+
 bool Utils::onBoard(int r, int c) {
     if (r < 8 && r >= 0 && c < 8 && c >=0) {
         return true;

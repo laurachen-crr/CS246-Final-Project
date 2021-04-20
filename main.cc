@@ -2,18 +2,17 @@
 #include <string>
 
 #include "cell.h"
+#include "exception.h"
 #include "grid.h"
 #include "observer.h"
 #include "subject.h"
 #include "utils.h"
-#include "exception.h"
 
 using namespace std;
 
 int main(int nargs, char *args[]) {
     Grid g{};
     g.init();
-    cout << g;
     Colour whoseMove = Colour::White;
     string command;
     char fromCol;
@@ -76,6 +75,8 @@ int main(int nargs, char *args[]) {
                     throw InvalidCommand();
                 }
 
+                cout << g << endl;
+
                 while (g.checkmate() == Result::InGame) {
                     try {
                         if (whoseMove == Colour::White) {
@@ -91,7 +92,9 @@ int main(int nargs, char *args[]) {
                                         throw InvalidCommand();
                                     }
                                     // move the piece
-                                    if (!(g.move(whoseMove, 8 - fromRow, fromCol - 'a', 8 - toRow, toCol - 'a'))) {
+                                    if (!(g.move(whoseMove, 8 - fromRow,
+                                                 fromCol - 'a', 8 - toRow,
+                                                 toCol - 'a'))) {
                                         throw InvalidCommand{};
                                     }
                                     cout << g << endl;
@@ -120,7 +123,9 @@ int main(int nargs, char *args[]) {
                                         throw InvalidCommand();
                                     }
                                     // move the piece
-                                    if (!(g.move(whoseMove, 8 - fromRow, fromCol - 'a', 8 - toRow, toCol - 'a'))) {
+                                    if (!(g.move(whoseMove, 8 - fromRow,
+                                                 fromCol - 'a', 8 - toRow,
+                                                 toCol - 'a'))) {
                                         throw InvalidCommand{};
                                     }
                                     cout << g << endl;
@@ -155,6 +160,7 @@ int main(int nargs, char *args[]) {
                     }
                 }
             } else if (command == "setup") {  // set up mode
+                cout << g << endl;
                 while (true) {
                     try {
                         cin >> cmd;
@@ -170,13 +176,10 @@ int main(int nargs, char *args[]) {
                                        toRow < 1 || toRow > 8) {
                                 throw InvalidCommand();
                             } else {
-                                if (g.setPiece(Utils::charToColour(pieceName),
-                                               8 - toRow, toCol - 'a',
-                                               Utils::charToType(pieceName))) {
-                                    cout << g << endl;
-                                } else {
-                                    throw InvalidCommand();
-                                }
+                                g.setPiece(Utils::charToColour(pieceName),
+                                           8 - toRow, toCol - 'a',
+                                           Utils::charToType(pieceName));
+                                cout << g << endl;
                             }
                         } else if (cmd == "-") {
                             cin >> fromCol;
@@ -199,7 +202,11 @@ int main(int nargs, char *args[]) {
                                 throw InvalidCommand();
                             }
                         } else if (cmd == "done") {
-                            break;
+                            if (g.validateSetup()) {
+                                break;
+                            } else {
+                                throw InvalidCommand();
+                            }
                         } else {
                             throw InvalidCommand();
                         }

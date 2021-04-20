@@ -9,6 +9,7 @@ class Piece;
 
 class Utils {
     public:
+    static Colour opponent(Colour colour);
     static bool onBoard(int r, int c);
     static char pieceToChar(Piece* piece);
     static Type charToType(char c);

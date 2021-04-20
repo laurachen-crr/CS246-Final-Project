@@ -1,20 +1,24 @@
 #include "piece.h"
+
+#include <vector>
+
 #include "grid.h"
 #include "utils.h"
-#include <vector>
 using namespace std;
 
-// helper for rook 
+// helper for rook
 int validMove(Grid& g, int atR, int atC, Colour colour) {
     Piece* currPiece = g.getPiece(atR, atC);
-    if (currPiece == nullptr) { // no piece at cell
-        return 0; // legal move
+    if (currPiece == nullptr) {  // no piece at cell
+        return 0;                // legal move
     } else {
-        Colour currColour = currPiece->getColour(); // get colour of piece at cell atR, atC
-        if (colour == currColour) {  // colour of atR,atC is the same as piece in question
-            return 1; // illegal
+        Colour currColour =
+            currPiece->getColour();  // get colour of piece at cell atR, atC
+        if (colour ==
+            currColour) {  // colour of atR,atC is the same as piece in question
+            return 1;      // illegal
         } else {
-            return 2; // legal but stop here
+            return 2;  // legal but stop here
         }
     }
 }
@@ -72,16 +76,16 @@ Rook::Rook(int row, int col, Colour colour)
 Knight::Knight(int row, int col, Colour colour)
     : Piece{row, col, colour, Type::Knight} {}
 
-bool King::checkValidMove(int r, int c, Grid& g) { 
+bool King::checkValidMove(int r, int c, Grid& g) {
     Pos destination = {r, c};
     vector<Pos> allValidMoves = this->getValidMoves(g);
     return Utils::posInVector(allValidMoves, destination);
 }
 
-bool Queen::checkValidMove(int r, int c, Grid& g) { 
+bool Queen::checkValidMove(int r, int c, Grid& g) {
     Pos destination = {r, c};
     vector<Pos> allValidMoves = this->getValidMoves(g);
-    return Utils::posInVector(allValidMoves, destination); 
+    return Utils::posInVector(allValidMoves, destination);
 }
 
 bool Bishop::checkValidMove(int r, int c, Grid& g) {
@@ -108,7 +112,7 @@ bool Knight::checkValidMove(int r, int c, Grid& g) {
     return Utils::posInVector(allValidMoves, destination);
 }
 
-vector<Pos> King::getValidMoves(Grid& g) {
+vector<Pos> King::getValidMoves(Grid& g, bool check) {
     vector<Pos> allValidMoves;
     int row = this->getPos().row;
     int col = this->getPos().col;
@@ -120,7 +124,9 @@ vector<Pos> King::getValidMoves(Grid& g) {
                 Piece* piece = g.getPiece(r + row, c + col);
                 if (piece == nullptr || piece->getColour() != colour) {
                     Pos pos = {r + row, c + col};
-                    allValidMoves.emplace_back(pos);
+                    if (!check || !g.check(this, pos)) {
+                        allValidMoves.push_back(pos);
+                    }
                 }
             }
         }
@@ -128,365 +134,370 @@ vector<Pos> King::getValidMoves(Grid& g) {
     return allValidMoves;
 }
 
-vector<Pos> Queen::getValidMoves(Grid& g) {
+vector<Pos> Queen::getValidMoves(Grid& g, bool check) {
     vector<Pos> validMoves;
-    int currR = this->getPos().row;
-    int currC = this->getPos().col;
-    Colour colour = this->getColour();
 
-    // find top right diag
-    int tempR = currR + 1;
-    int tempC = currC + 1;
-    while (tempC <= 7 && tempR <= 7) {
-        int moveStatus = validMove(g, tempR, tempC, colour);
-        if (moveStatus == 0) {
-            validMoves.push_back(Pos{tempR, tempC});
-        } else if (moveStatus == 1) {
-            break;
-        } else {
-            validMoves.push_back(Pos{tempR, tempC});
-            break;
+    Pos curPos = this->getPos();
+    int row = curPos.row;
+    int col = curPos.col;
+
+    // loop diagonally
+    for (int i = 0; i <= 3; ++i) {
+        int offsetRow = 0;
+        int offsetCol = 0;
+        int incrementRow = 0;
+        int incrementCol = 0;
+        switch (i) {
+            case 0:  // up right
+                offsetRow = 1;
+                offsetCol = 1;
+                incrementRow = 1;
+                incrementCol = 1;
+                break;
+            case 1:  // down right
+                offsetRow = -1;
+                offsetCol = 1;
+                incrementRow = -1;
+                incrementCol = 1;
+                break;
+            case 2:  // up left
+                offsetRow = 1;
+                offsetCol = -1;
+                incrementRow = 1;
+                incrementCol = -1;
+                break;
+            case 3:  // down left
+                offsetRow = -1;
+                offsetCol = -1;
+                incrementRow = -1;
+                incrementCol = -1;
+                break;
         }
-        tempR += 1;
-        tempC += 1;
+
+        while (Utils::onBoard(row + offsetRow, col + offsetCol)) {
+            Piece* curPiece = g.getPiece(row + offsetRow, col + offsetCol);
+            Pos pos = {row + offsetRow, col + offsetCol};
+
+            if (curPiece != nullptr) {
+                // can't jump over own piece
+                if (curPiece->getColour() == this->getColour()) {
+                    break;
+                } else {
+                    if (!check || !g.check(this, pos)) {
+                        validMoves.push_back(pos);
+                    }
+                    break;
+                }
+            } else {  // empty spot
+                if (!check || !g.check(this, pos)) {
+                    validMoves.push_back(pos);
+                }
+            }
+            offsetRow += incrementRow;
+            offsetCol += incrementCol;
+        }
     }
 
-    // find bottom right diag
-    tempR = currR - 1;
-    tempC = currC + 1;
-    while (tempC <= 7 && tempR >= 0) {
-        int moveStatus = validMove(g, tempR, tempC, colour);
-        if (moveStatus == 0) {
-            validMoves.push_back(Pos{tempR, tempC});
-        } else if (moveStatus == 1) {
-            break;
-        } else {
-            validMoves.push_back(Pos{tempR, tempC});
-            break;
+    // loop horizontally and vertically
+    for (int i = 0; i <= 3; ++i) {
+        int offsetRow = 0;
+        int offsetCol = 0;
+        int incrementRow = 0;
+        int incrementCol = 0;
+        switch (i) {
+            case 0:  // up
+                offsetRow = 1;
+                incrementRow = 1;
+                break;
+            case 1:  // down
+                offsetRow = -1;
+                incrementRow = -1;
+                break;
+            case 2:  // right
+                offsetCol = 1;
+                incrementCol = 1;
+                break;
+            case 3:  // left
+                offsetCol = -1;
+                incrementCol = -1;
+                break;
         }
-        tempR -= 1;
-        tempC += 1;
+
+        while (Utils::onBoard(row + offsetRow, col + offsetCol)) {
+            Piece* curPiece = g.getPiece(row + offsetRow, col + offsetCol);
+            Pos pos = {row + offsetRow, col + offsetCol};
+
+            if (curPiece != nullptr) {
+                // can't jump over own piece
+                if (curPiece->getColour() == this->getColour()) {
+                    break;
+                } else {
+                    if (!check || !g.check(this, pos)) {
+                        validMoves.push_back(pos);
+                    }
+                    break;
+                }
+            } else {  // empty spot
+                if (!check || !g.check(this, pos)) {
+                    validMoves.push_back(pos);
+                }
+            }
+            offsetRow += incrementRow;
+            offsetCol += incrementCol;
+        }
     }
 
-    // find bottom left diag
-    tempR = currR - 1;
-    tempC = currC - 1;
-    while (tempC >= 0 && tempR >= 0) {
-        int moveStatus = validMove(g, tempR, tempC, colour);
-        if (moveStatus == 0) {
-            validMoves.push_back(Pos{tempR, tempC});
-        } else if (moveStatus == 1) {
-            break;
-        } else {
-            validMoves.push_back(Pos{tempR, tempC});
-            break;
-        }
-        tempR -= 1;
-        tempC -= 1;
-    }
-
-    // find top left diag
-    tempR = currR + 1;
-    tempC = currC - 1;
-    while (tempC >= 0 && tempR <= 7) {
-        int moveStatus = validMove(g, tempR, tempC, colour);
-        if (moveStatus == 0) {
-            validMoves.push_back(Pos{tempR, tempC});
-        } else if (moveStatus == 1) {
-            break;
-        } else {
-            validMoves.push_back(Pos{tempR, tempC});
-            break;
-        }
-        tempR += 1;
-        tempC -= 1;
-    }
-
-    tempR = currR + 1;
-    // find moves forward
-    while (tempR <= 7) {
-        int moveStatus = validMove(g, tempR, currC, colour);
-        if (moveStatus == 0) {
-            validMoves.push_back(Pos{tempR, currC});
-        } else if (moveStatus == 1) {
-            break;
-        } else {
-            validMoves.push_back(Pos{tempR, currC});
-            break;
-        }
-        tempR += 1;
-    }
-
-    tempR = currR - 1;
-    // find moves backward
-    while (tempR >= 0) {
-        int moveStatus = validMove(g, tempR, currC, colour);
-        if (moveStatus == 0) {
-            validMoves.push_back(Pos{tempR, currC});
-        } else if (moveStatus == 1) {
-            break;
-        } else {
-            validMoves.push_back(Pos{tempR, currC});
-            break;
-        }
-        tempR -= 1;
-    }
-
-    tempC = currC + 1;
-    // find moves to the right
-    while (tempC <= 7) {
-        int moveStatus = validMove(g, currR, tempC, colour);
-        if (moveStatus == 0) {
-            validMoves.push_back(Pos{currR, tempC});
-        } else if (moveStatus == 1) {
-            break;
-        } else {
-            validMoves.push_back(Pos{currR, tempC});
-            break;
-        }
-        tempC += 1;
-    }
-
-    tempC = currC - 1;
-    // find moves to the left
-    while (tempC >= 0) {
-        int moveStatus = validMove(g, currR, tempC, colour);
-        if (moveStatus == 0) {
-            validMoves.push_back(Pos{currR, tempC});
-        } else if (moveStatus == 1) {
-            break;
-        } else {
-            validMoves.push_back(Pos{currR, tempC});
-            break;
-        }
-        tempC -= 1;
-    }
     return validMoves;
 }
 
-vector<Pos> Bishop::getValidMoves(Grid& g) {
+vector<Pos> Bishop::getValidMoves(Grid& g, bool check) {
     vector<Pos> validMoves;
-    int currR = this->getPos().row;
-    int currC = this->getPos().col;
-    Colour colour = this->getColour();
 
-    // find top right diag
-    int tempR = currR + 1;
-    int tempC = currC + 1;
-    while (tempC <= 7 && tempR <= 7) {
-        int moveStatus = validMove(g, tempR, tempC, colour);
-        if (moveStatus == 0) {
-            validMoves.push_back(Pos{tempR, tempC});
-        } else if (moveStatus == 1) {
-            break;
-        } else {
-            validMoves.push_back(Pos{tempR, tempC});
-            break;
+    Pos curPos = this->getPos();
+    int row = curPos.row;
+    int col = curPos.col;
+
+    // loop diagonally
+    for (int i = 0; i <= 3; ++i) {
+        int offsetRow = 0;
+        int offsetCol = 0;
+        int incrementRow = 0;
+        int incrementCol = 0;
+        switch (i) {
+            case 0:  // up right
+                offsetRow = 1;
+                offsetCol = 1;
+                incrementRow = 1;
+                incrementCol = 1;
+                break;
+            case 1:  // down right
+                offsetRow = -1;
+                offsetCol = 1;
+                incrementRow = -1;
+                incrementCol = 1;
+                break;
+            case 2:  // up left
+                offsetRow = 1;
+                offsetCol = -1;
+                incrementRow = 1;
+                incrementCol = -1;
+                break;
+            case 3:  // down left
+                offsetRow = -1;
+                offsetCol = -1;
+                incrementRow = -1;
+                incrementCol = -1;
+                break;
         }
-        tempR += 1;
-        tempC += 1;
+
+        while (Utils::onBoard(row + offsetRow, col + offsetCol)) {
+            Piece* curPiece = g.getPiece(row + offsetRow, col + offsetCol);
+            Pos pos = {row + offsetRow, col + offsetCol};
+
+            if (curPiece != nullptr) {
+                // can't jump over own piece
+                if (curPiece->getColour() == this->getColour()) {
+                    break;
+                } else {
+                    if (!check || !g.check(this, pos)) {
+                        validMoves.push_back(pos);
+                    }
+                    break;
+                }
+            } else {  // empty spot
+                if (!check || !g.check(this, pos)) {
+                    validMoves.push_back(pos);
+                }
+            }
+            offsetRow += incrementRow;
+            offsetCol += incrementCol;
+        }
     }
 
-    // find bottom right diag
-    tempR = currR - 1;
-    tempC = currC + 1;
-    while (tempC <= 7 && tempR >= 0) {
-        int moveStatus = validMove(g, tempR, tempC, colour);
-        if (moveStatus == 0) {
-            validMoves.push_back(Pos{tempR, tempC});
-        } else if (moveStatus == 1) {
-            break;
-        } else {
-            validMoves.push_back(Pos{tempR, tempC});
-            break;
-        }
-        tempR -= 1;
-        tempC += 1;
-    }
-
-    // find bottom left diag
-    tempR = currR - 1;
-    tempC = currC - 1;
-    while (tempC >= 0 && tempR >= 0) {
-        int moveStatus = validMove(g, tempR, tempC, colour);
-        if (moveStatus == 0) {
-            validMoves.push_back(Pos{tempR, tempC});
-        } else if (moveStatus == 1) {
-            break;
-        } else {
-            validMoves.push_back(Pos{tempR, tempC});
-            break;
-        }
-        tempR -= 1;
-        tempC -= 1;
-    }
-
-    // find top left diag
-    tempR = currR + 1;
-    tempC = currC - 1;
-    while (tempC >= 0 && tempR <= 7) {
-        int moveStatus = validMove(g, tempR, tempC, colour);
-        if (moveStatus == 0) {
-            validMoves.push_back(Pos{tempR, tempC});
-        } else if (moveStatus == 1) {
-            break;
-        } else {
-            validMoves.push_back(Pos{tempR, tempC});
-            break;
-        }
-        tempR += 1;
-        tempC -= 1;
-    }
     return validMoves;
-
 }
 
-vector<Pos> Pawn::getValidMoves(Grid& g) {
+vector<Pos> Pawn::getValidMoves(Grid& g, bool check) {
     int row = this->getPos().row;
     int col = this->getPos().col;
     vector<Pos> allValidMoves;
 
-    if(this->getColour() == Colour::White) {
-        if(row != 0) {
-            if(g.getPiece(row-1, col) == nullptr) {
-                allValidMoves.push_back({row-1, col});
+    if (this->getColour() == Colour::White) {
+        if (row != 0) {
+            if (g.getPiece(row - 1, col) == nullptr) {
+                Pos pos = {row - 1, col};
+                if (!check || !g.check(this, pos)) {
+                    allValidMoves.push_back(pos);
+                }
             }
 
-            if(Utils::onBoard(row-1, col+1)) {
-                if(g.getPiece(row-1, col+1) != nullptr && g.getPiece(row-1, col+1)->getColour() == Colour::Black) {
-                    allValidMoves.push_back({row-1, col+1});
+            if (Utils::onBoard(row - 1, col + 1)) {
+                if (g.getPiece(row - 1, col + 1) != nullptr &&
+                    g.getPiece(row - 1, col + 1)->getColour() ==
+                        Colour::Black) {
+                    Pos pos = {row - 1, col + 1};
+                    if (!check || !g.check(this, pos)) {
+                        allValidMoves.push_back(pos);
+                    }
                 }
-            } else if(Utils::onBoard(row-1, col-1)) {
-                if(g.getPiece(row-1, col-1) != nullptr && g.getPiece(row-1, col-1)->getColour() == Colour::Black) {
-                    allValidMoves.push_back({row-1, col-1});
+            } else if (Utils::onBoard(row - 1, col - 1)) {
+                if (g.getPiece(row - 1, col - 1) != nullptr &&
+                    g.getPiece(row - 1, col - 1)->getColour() ==
+                        Colour::Black) {
+                    Pos pos = {row - 1, col - 1};
+                    if (!check || !g.check(this, pos)) {
+                        allValidMoves.push_back(pos);
+                    }
                 }
             }
-            if(row == 6) {
-                if(g.getPiece(4, col) == nullptr) {
-                    allValidMoves.push_back({4, col});
-                } 
+            if (row == 6) {
+                if (g.getPiece(4, col) == nullptr) {
+                    Pos pos = {4, col};
+                    if (!check || !g.check(this, pos)) {
+                        allValidMoves.push_back(pos);
+                    }
+                }
             }
         }
     } else {
-        if(row != 7) {
-            if(g.getPiece(row+1, col) == nullptr) {
-                allValidMoves.push_back({row+1, col});
-            }
-            
-            if(Utils::onBoard(row+1, col+1)) {
-                if(g.getPiece(row+1, col+1) != nullptr && g.getPiece(row+1, col+1)->getColour() == Colour::White) {
-                    allValidMoves.push_back({row+1, col+1});
-                }
-            } else if(Utils::onBoard(row+1, col-1)) {
-                if(g.getPiece(row+1, col-1) != nullptr && g.getPiece(row+1, col-1)->getColour() == Colour::White) {
-                    allValidMoves.push_back({row+1, col-1});
+        if (row != 7) {
+            if (g.getPiece(row + 1, col) == nullptr) {
+                Pos pos = {row + 1, col};
+                if (!check || !g.check(this, pos)) {
+                    allValidMoves.push_back(pos);
                 }
             }
-            if(row == 1) {
-                if(g.getPiece(3, col) == nullptr) {
-                    allValidMoves.push_back({3, col});
+
+            if (Utils::onBoard(row + 1, col + 1)) {
+                if (g.getPiece(row + 1, col + 1) != nullptr &&
+                    g.getPiece(row + 1, col + 1)->getColour() ==
+                        Colour::White) {
+                    Pos pos = {row + 1, col + 1};
+                    if (!check || !g.check(this, pos)) {
+                        allValidMoves.push_back(pos);
+                    }
                 }
-                
+            } else if (Utils::onBoard(row + 1, col - 1)) {
+                if (g.getPiece(row + 1, col - 1) != nullptr &&
+                    g.getPiece(row + 1, col - 1)->getColour() ==
+                        Colour::White) {
+                    Pos pos = {row + 1, col - 1};
+                    if (!check || !g.check(this, pos)) {
+                        allValidMoves.push_back(pos);
+                    }
+                }
+            }
+            if (row == 1) {
+                if (g.getPiece(3, col) == nullptr) {
+                    Pos pos = {3, col};
+                    if (!check || !g.check(this, pos)) {
+                        allValidMoves.push_back(pos);
+                    }
+                }
             }
         }
     }
+
     return allValidMoves;
 }
 
-vector<Pos> Knight::getValidMoves(Grid& g) {
+vector<Pos> Knight::getValidMoves(Grid& g, bool check) {
     int row = this->getPos().row;
     int col = this->getPos().col;
     vector<Pos> allValidMoves;
 
-    if(Utils::onBoard(row+2, col+1)) {
-        allValidMoves.push_back({row+2, col+1});
-        if(g.getPiece(row+2, col+1) != nullptr && g.getPiece(row+2, col+1)->getColour() == this->getColour()) {
-            allValidMoves.pop_back();
+    if (Utils::onBoard(row + 2, col + 1)) {
+        if (!(g.getPiece(row + 2, col + 1) != nullptr &&
+              g.getPiece(row + 2, col + 1)->getColour() == this->getColour())) {
+            Pos pos = {row + 2, col + 1};
+            if (!check || !g.check(this, pos)) {
+                allValidMoves.push_back(pos);
+            }
         }
-    } else if(Utils::onBoard(row-2, col+1)) {
-        allValidMoves.push_back({row-2, col+1});
-        if(g.getPiece(row-2, col+1) != nullptr && g.getPiece(row-2, col+1)->getColour() == this->getColour()) {
-            allValidMoves.pop_back();
+    } else if (Utils::onBoard(row - 2, col + 1)) {
+        if (!(g.getPiece(row - 2, col + 1) != nullptr &&
+              g.getPiece(row - 2, col + 1)->getColour() == this->getColour())) {
+            Pos pos = {row - 2, col + 1};
+            if (!check || !g.check(this, pos)) {
+                allValidMoves.push_back(pos);
+            }
         }
-    } else if(Utils::onBoard(row+2, col-1)) {
-        allValidMoves.push_back({row+2, col-1});
-        if(g.getPiece(row+2, col-1) != nullptr && g.getPiece(row+2, col-1)->getColour() == this->getColour()) {
-            allValidMoves.pop_back();
+    } else if (Utils::onBoard(row + 2, col - 1)) {
+        if (!(g.getPiece(row + 2, col - 1) != nullptr &&
+              g.getPiece(row + 2, col - 1)->getColour() == this->getColour())) {
+            Pos pos = {row + 2, col - 1};
+            if (!check || !g.check(this, pos)) {
+                allValidMoves.push_back(pos);
+            }
         }
-    } else if(Utils::onBoard(row-2, col-1)) {
-        allValidMoves.push_back({row-2, col-1});
-        if(g.getPiece(row-2, col-1) != nullptr && g.getPiece(row-2, col-1)->getColour() == this->getColour()) {
-            allValidMoves.pop_back();
+    } else if (Utils::onBoard(row - 2, col - 1)) {
+        if (!(g.getPiece(row - 2, col - 1) != nullptr &&
+              g.getPiece(row - 2, col - 1)->getColour() == this->getColour())) {
+            Pos pos = {row - 2, col - 1};
+            if (!check || !g.check(this, pos)) {
+                allValidMoves.push_back(pos);
+            }
         }
     }
     return allValidMoves;
 }
 
-vector<Pos> Rook::getValidMoves(Grid& g) {
+vector<Pos> Rook::getValidMoves(Grid& g, bool check) {
     vector<Pos> validMoves;
-    int currR = this->getPos().row;
-    int currC = this->getPos().col;
-    Colour colour = this->getColour();
 
-    int tempR = currR + 1;
-    // find moves forward
-    while (tempR <= 7) {
-        int moveStatus = validMove(g, tempR, currC, colour);
-        if (moveStatus == 0) {
-            validMoves.push_back(Pos{tempR, currC});
-        } else if (moveStatus == 1) {
-            break;
-        } else {
-            validMoves.push_back(Pos{tempR, currC});
-            break;
+    Pos curPos = this->getPos();
+    int row = curPos.row;
+    int col = curPos.col;
+
+    // loop horizontally and vertically
+    for (int i = 0; i <= 3; ++i) {
+        int offsetRow = 0;
+        int offsetCol = 0;
+        int incrementRow = 0;
+        int incrementCol = 0;
+        switch (i) {
+            case 0:  // up
+                offsetRow = 1;
+                incrementRow = 1;
+                break;
+            case 1:  // down
+                offsetRow = -1;
+                incrementRow = -1;
+                break;
+            case 2:  // right
+                offsetCol = 1;
+                incrementCol = 1;
+                break;
+            case 3:  // left
+                offsetCol = -1;
+                incrementCol = -1;
+                break;
         }
-        tempR += 1;
+
+        while (Utils::onBoard(row + offsetRow, col + offsetCol)) {
+            Piece* curPiece = g.getPiece(row + offsetRow, col + offsetCol);
+            Pos pos = {row + offsetRow, col + offsetCol};
+
+            if (curPiece != nullptr) {
+                // can't jump over own piece
+                if (curPiece->getColour() == this->getColour()) {
+                    break;
+                } else {
+                    if (!check || !g.check(this, pos)) {
+                        validMoves.push_back(pos);
+                    }
+                    break;
+                }
+            } else {  // empty spot
+                if (!check || !g.check(this, pos)) {
+                    validMoves.push_back(pos);
+                }
+            }
+            offsetRow += incrementRow;
+            offsetCol += incrementCol;
+        }
     }
 
-    tempR = currR - 1;
-    // find moves backward
-    while (tempR >= 0) {
-        int moveStatus = validMove(g, tempR, currC, colour);
-        if (moveStatus == 0) {
-            validMoves.push_back(Pos{tempR, currC});
-        } else if (moveStatus == 1) {
-            break;
-        } else {
-            validMoves.push_back(Pos{tempR, currC});
-            break;
-        }
-        tempR -= 1;
-    }
-
-    int tempC = currC + 1;
-    // find moves to the right
-    while (tempC <= 7) {
-        int moveStatus = validMove(g, currR, tempC, colour);
-        if (moveStatus == 0) {
-            validMoves.push_back(Pos{currR, tempC});
-        } else if (moveStatus == 1) {
-            break;
-        } else {
-            validMoves.push_back(Pos{currR, tempC});
-            break;
-        }
-        tempC += 1;
-    }
-
-    tempC = currC - 1;
-    // find moves to the left
-    while (tempC >= 0) {
-        int moveStatus = validMove(g, currR, tempC, colour);
-        if (moveStatus == 0) {
-            validMoves.push_back(Pos{currR, tempC});
-        } else if (moveStatus == 1) {
-            break;
-        } else {
-            validMoves.push_back(Pos{currR, tempC});
-            break;
-        }
-        tempC -= 1;
-    }
     return validMoves;
 }
 
