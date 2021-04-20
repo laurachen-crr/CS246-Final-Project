@@ -38,6 +38,7 @@ public:
 
 class King : public Piece {
 public:
+    bool firstMove = true;
     King(int row, int col, Colour);
     Pos findBestMove() override;
     bool checkValidMove(int r, int c, Grid& g) override;
@@ -70,6 +71,7 @@ public:
 
 class Rook : public Piece {
 public:
+    bool firstMove = true;
     Rook(int row, int col, Colour);
     Pos findBestMove() override;   
     bool checkValidMove(int r, int c, Grid& g) override;   

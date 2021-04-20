@@ -128,7 +128,7 @@ bool Grid::check(Piece* piece, Pos pos) {
     Colour colour = piece->getColour();
     bool inCheck;
     Cell& pieceCell = this->getCell(piecePos.row, piecePos.col);
-    if (piecePos.col == pos.col && piecePos.row == pos.row) {
+    if (piecePos == pos) {
         inCheck = this->check(colour, false);
     } else {
         Piece* curPiece = this->getPiece(pos.row, pos.col);
@@ -305,7 +305,7 @@ Result Grid::checkmate() {
         return Result::Stalemate;
     }
 
-    // check if there's any move that can avoid check (ie. try all possible moves)
+    // check if there's any move that can avoid check (ie. try all moves)
     vector<Piece*>& pieces = this->getPieces(Utils::opponent(colour));
 
     for (auto piece : pieces) {

@@ -131,6 +131,13 @@ vector<Pos> King::getValidMoves(Grid& g, bool check) {
             }
         }
     }
+
+    // bool castling = true;
+    // if(this->firstMove) { // king first move
+    //     if(g.getPiece(row, 0) != nullptr && g.getPiece(row, 0)->getType() == Type::Rook && g.getPiece().firstMove) {
+    //         for(int i = col-1; i--; )
+    //     }
+    // }
     return allValidMoves;
 }
 

@@ -7,6 +7,8 @@
 #include "observer.h"
 #include "subject.h"
 #include "utils.h"
+#include "computer.h"
+#include <stdlib.h>
 
 using namespace std;
 
@@ -56,7 +58,8 @@ int main(int nargs, char *args[]) {
                 string whiteplayer, blackplayer;
                 cin >> whiteplayer >> blackplayer;
 
-                int level;
+                int level = -1;
+                Computer* computer = nullptr;
                 if (whiteplayer.substr(0, whiteplayer.size() - 1) ==
                     "computer") {
                     if (blackplayer != "human") {
@@ -73,6 +76,11 @@ int main(int nargs, char *args[]) {
                     blackplayer = "computer";
                 } else if (whiteplayer != "human" || blackplayer != "human") {
                     throw InvalidCommand();
+                }
+
+                if (level != -1) {
+                    srand(seed);
+                    computer = Computer::createComputer(level);
                 }
 
                 cout << g << endl;

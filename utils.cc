@@ -17,7 +17,7 @@ bool Utils::onBoard(int r, int c) {
 
 bool Utils::posInVector(vector<Pos>& v, Pos pos) {
     for (auto p : v) {
-        if (p.row == pos.row && p.col == pos.col) {
+        if (p == pos) {
             return true;
         }
     }
