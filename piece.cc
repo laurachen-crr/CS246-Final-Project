@@ -340,7 +340,9 @@ vector<Pos> Pawn::getValidMoves(Grid& g, bool check) {
                         allValidMoves.push_back(pos);
                     }
                 }
-            } else if (Utils::onBoard(row - 1, col - 1)) {
+            } 
+            
+            if (Utils::onBoard(row - 1, col - 1)) {
                 if (g.getPiece(row - 1, col - 1) != nullptr &&
                     g.getPiece(row - 1, col - 1)->getColour() ==
                         Colour::Black) {
@@ -350,6 +352,7 @@ vector<Pos> Pawn::getValidMoves(Grid& g, bool check) {
                     }
                 }
             }
+
             if (row == 6) {
                 if (g.getPiece(4, col) == nullptr) {
                     Pos pos = {4, col};
@@ -377,7 +380,9 @@ vector<Pos> Pawn::getValidMoves(Grid& g, bool check) {
                         allValidMoves.push_back(pos);
                     }
                 }
-            } else if (Utils::onBoard(row + 1, col - 1)) {
+            } 
+            
+            if (Utils::onBoard(row + 1, col - 1)) {
                 if (g.getPiece(row + 1, col - 1) != nullptr &&
                     g.getPiece(row + 1, col - 1)->getColour() ==
                         Colour::White) {
@@ -387,6 +392,7 @@ vector<Pos> Pawn::getValidMoves(Grid& g, bool check) {
                     }
                 }
             }
+
             if (row == 1) {
                 if (g.getPiece(3, col) == nullptr) {
                     Pos pos = {3, col};
@@ -395,6 +401,12 @@ vector<Pos> Pawn::getValidMoves(Grid& g, bool check) {
                     }
                 }
             }
+        }
+    }
+
+    if (check) {
+        for (auto pos : allValidMoves) {
+            cout << 8 - pos.row << " : " << pos.col + 1 << endl;
         }
     }
 

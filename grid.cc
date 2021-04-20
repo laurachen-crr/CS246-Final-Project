@@ -279,7 +279,6 @@ vector<Piece*>& Grid::getPieces(Colour colour) {
 // return the state of the game
 // NEED TO ADD: check for stalemate
 Result Grid::checkmate() {
-    return Result::InGame;
     Piece* king;
     Colour colour;
     if (this->check(Colour::White)) {
