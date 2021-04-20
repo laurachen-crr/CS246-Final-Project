@@ -9,6 +9,7 @@
 using namespace std;
 
 Computer* Computer::createComputer(int level) {
+    cout << "level: " << level << endl;
     switch(level) {
         case 1:
             return new Computer1{};
@@ -36,6 +37,7 @@ pair<Pos, Pos> Computer1::getNextMove(Grid& g, Colour colour) {
             size++;
         }
     }
+
     index = rand() % size;
     return allMoves.at(index);
 }

@@ -133,9 +133,16 @@ bool Grid::check(Piece* piece, Pos pos) {
     } else {
         Piece* curPiece = this->getPiece(pos.row, pos.col);
         Cell& curCell = this->getCell(pos.row, pos.col);
+
+        // move new piece to pos
         this->removePiece(curPiece);
         curCell.setPiece(piece);
+
+        // see if in check after move
         inCheck = this->check(colour, false);
+
+        // put old and new piece back
+        curCell.removePiece();
         this->setPiece(pos.row, pos.col, curPiece);
         pieceCell.setPiece(piece);
     }
@@ -163,6 +170,7 @@ bool Grid::check(Colour colour, bool check) {
 // sets newPiece at (r, c)
 // this method does not clean up memory or validate!
 // use this for general purposes
+// note this removes the original piece at (r, c) completely
 void Grid::setPiece(int r, int c, Piece* newPiece) {
     Piece* oldPiece = this->getPiece(r, c);
     this->removePiece(oldPiece);
@@ -345,8 +353,3 @@ Grid::~Grid() {
     delete this->td;
 }
 
-void computerBestMove(Colour colour, int level) {
-    // first decide if there is any check
-    // if there is no check, decide if there is any capture move
-    // if there is no capture move, make a random move
-}

@@ -65,7 +65,7 @@ int main(int nargs, char *args[]) {
                     if (blackplayer != "human") {
                         throw InvalidCommand();
                     }
-                    level = whiteplayer.back();
+                    level = whiteplayer.back() - '0';
                     whiteplayer = "computer";
                 } else if (blackplayer.substr(0, blackplayer.size() - 1) ==
                            "computer") {
@@ -116,7 +116,9 @@ int main(int nargs, char *args[]) {
                             } else if (whiteplayer == "computer") {
                                 // make the computer move
                                 // g.computerBestMove(whoseMove, level);
-                                cout << "white computer made a move" << endl;
+                                std::pair <Pos, Pos> move = computer->getNextMove(g, Colour::White);
+                                g.move(Colour::White, move.first.row, move.first.col, move.second.row, move.second.col);
+                                cout << g << endl;
                             }
                         } else if (whoseMove == Colour::Black) {
                             if (blackplayer == "human") {
@@ -148,6 +150,9 @@ int main(int nargs, char *args[]) {
                                 // make the computer move
                                 // g.computerBestMove(whoseMove, level);
                                 // cout << g << endl;
+                                std::pair <Pos, Pos> move = computer->getNextMove(g, Colour::Black);
+                                g.move(Colour::Black, move.first.row, move.first.col, move.second.row, move.second.col);
+                                cout << g << endl;
                             }
                         }
 

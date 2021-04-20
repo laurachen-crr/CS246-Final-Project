@@ -411,12 +411,6 @@ vector<Pos> Pawn::getValidMoves(Grid& g, bool check) {
         }
     }
 
-    if (check) {
-        for (auto pos : allValidMoves) {
-            cout << 8 - pos.row << " : " << pos.col + 1 << endl;
-        }
-    }
-
     return allValidMoves;
 }
 
@@ -433,7 +427,9 @@ vector<Pos> Knight::getValidMoves(Grid& g, bool check) {
                 allValidMoves.push_back(pos);
             }
         }
-    } else if (Utils::onBoard(row - 2, col + 1)) {
+    } 
+    
+    if (Utils::onBoard(row - 2, col + 1)) {
         if (!(g.getPiece(row - 2, col + 1) != nullptr &&
               g.getPiece(row - 2, col + 1)->getColour() == this->getColour())) {
             Pos pos = {row - 2, col + 1};
@@ -441,7 +437,9 @@ vector<Pos> Knight::getValidMoves(Grid& g, bool check) {
                 allValidMoves.push_back(pos);
             }
         }
-    } else if (Utils::onBoard(row + 2, col - 1)) {
+    } 
+    
+    if (Utils::onBoard(row + 2, col - 1)) {
         if (!(g.getPiece(row + 2, col - 1) != nullptr &&
               g.getPiece(row + 2, col - 1)->getColour() == this->getColour())) {
             Pos pos = {row + 2, col - 1};
@@ -449,7 +447,9 @@ vector<Pos> Knight::getValidMoves(Grid& g, bool check) {
                 allValidMoves.push_back(pos);
             }
         }
-    } else if (Utils::onBoard(row - 2, col - 1)) {
+    } 
+    
+    if (Utils::onBoard(row - 2, col - 1)) {
         if (!(g.getPiece(row - 2, col - 1) != nullptr &&
               g.getPiece(row - 2, col - 1)->getColour() == this->getColour())) {
             Pos pos = {row - 2, col - 1};
@@ -458,6 +458,7 @@ vector<Pos> Knight::getValidMoves(Grid& g, bool check) {
             }
         }
     }
+    
     return allValidMoves;
 }
 
@@ -519,18 +520,6 @@ vector<Pos> Rook::getValidMoves(Grid& g, bool check) {
 
     return validMoves;
 }
-
-Pos King::findBestMove() {}
-
-Pos Queen::findBestMove() {}
-
-Pos Bishop::findBestMove() {}
-
-Pos Pawn::findBestMove() {}
-
-Pos Rook::findBestMove() {}
-
-Pos Knight::findBestMove() {}
 
 void Piece::MovePiece(int r, int c) {
     this->pos.row = r;
