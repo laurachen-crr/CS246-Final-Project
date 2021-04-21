@@ -6,9 +6,11 @@
 #include "piece.h"
 #include "subject.h"
 #include "enums.h"
+#include "graphicsdisplay.h"
 
 class InvalidMove {};
 class TextDisplay;
+class GraphicsDisplay;
 
 class Grid : public Subject, public Observer {
     std::vector<std::vector<Cell>> grid;
@@ -16,7 +18,7 @@ class Grid : public Subject, public Observer {
     std::vector<Piece *> white;
 
     TextDisplay *td;  // The text display.
-    // GraphDisplay *gd = nullptr; // Another observer (intent:  graphics)
+    GraphicsDisplay *gd = nullptr; // Another observer (intent:  graphics)
     void setObserver(Observer *ob);
 
    public:

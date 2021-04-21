@@ -9,6 +9,27 @@
 using namespace std;
 
 Xwindow::Xwindow(int width, int height) {
+  this->layout.resize(8);
+
+  for (int i = 0; i < 4; ++i) {
+        this->layout.at(0).emplace_back('-');
+        this->layout.at(0).emplace_back(' ');
+        this->layout.at(2).emplace_back('-');
+        this->layout.at(2).emplace_back(' ');
+        this->layout.at(4).emplace_back('-');
+        this->layout.at(4).emplace_back(' ');
+        this->layout.at(6).emplace_back('-');
+        this->layout.at(6).emplace_back(' ');
+
+        this->layout.at(1).emplace_back(' ');
+        this->layout.at(1).emplace_back('-');
+        this->layout.at(3).emplace_back(' ');
+        this->layout.at(3).emplace_back('-');
+        this->layout.at(5).emplace_back(' ');
+        this->layout.at(5).emplace_back('-');
+        this->layout.at(7).emplace_back(' ');
+        this->layout.at(7).emplace_back('-');
+    }
 
   d = XOpenDisplay(NULL);
   if (d == NULL) {
@@ -31,7 +52,7 @@ Xwindow::Xwindow(int width, int height) {
   // Set up colours.
   XColor xcolour;
   Colormap cmap;
-  char color_vals[7][10]={"white", "black", "red", "green", "blue"};
+  char color_vals[7][10]={"white", "gray", "red", "green", "blue"};
 
   cmap=DefaultColormap(d,DefaultScreen(d));
   for(int i=0; i < 5; ++i) {
@@ -40,7 +61,7 @@ Xwindow::Xwindow(int width, int height) {
       colours[i]=xcolour.pixel;
   }
 
-  XSetForeground(d,gc,colours[Black]);
+  XSetForeground(d,gc,colours[Gray]);
 
   // Make window non-resizeable.
   XSizeHints hints;
@@ -62,10 +83,41 @@ Xwindow::~Xwindow() {
 void Xwindow::fillRectangle(int x, int y, int width, int height, int colour) {
   XSetForeground(d, gc, colours[colour]);
   XFillRectangle(d, w, gc, x, y, width, height);
-  XSetForeground(d, gc, colours[Black]);
+  XSetForeground(d, gc, colours[Gray]);
 }
 
 void Xwindow::drawString(int x, int y, string msg) {
   XDrawString(d, w, DefaultGC(d, s), x, y, msg.c_str(), msg.length());
 }
 
+void Xwindow::drawGrid() {
+  for (int i = 0; i < 8; i++) {
+    for (int j = 0; j < 8; j++) {
+      char tmp = this->layout.at(i).at(j);
+      if (tmp == '-') {
+        this->fillRectangle(50 + 50 * i, 50 * j, 50, 50, 0);
+      } else {
+        this->fillRectangle(50 + 50 * i, 50 * j, 50, 50, 1);
+      }
+    }
+  }
+
+  this->drawString(25, 25, "8");
+  this->drawString(25, 75, "7");
+  this->drawString(25, 125, "6");
+  this->drawString(25, 175, "5");
+  this->drawString(25, 225, "4");
+  this->drawString(25, 275, "3");
+  this->drawString(25, 325, "2");
+  this->drawString(25, 375, "1");
+
+  this->drawString(75, 425, "a");
+  this->drawString(125, 425, "b");
+  this->drawString(175, 425, "c");
+  this->drawString(225, 425, "d");
+  this->drawString(275, 425, "e");
+  this->drawString(325, 425, "f");
+  this->drawString(375, 425, "g");
+  this->drawString(425, 425, "h");
+
+}

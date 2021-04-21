@@ -29,6 +29,7 @@ Grid::Grid() {
     this->white.emplace_back(Piece::createPiece(0, 7, Colour::White, Type::Rook));
 
     this->td = new TextDisplay{};
+    this->gd = new GraphicsDisplay{};
 }
 
 
@@ -46,8 +47,9 @@ void Grid::init() {
         this->grid.at(6).at(i).setPiece(this->white.at(i));
         this->grid.at(7).at(i).setPiece(this->white.at(i+8));
     }
-    // update textdisplay
+    // update textdisplay and graphic display
     this->td->update(*this);
+    this->gd->updateGrid(*this);
 
     // attach observers(all pieces) to the grid
     for(int i = 0; i < 16; ++i) {
@@ -104,6 +106,7 @@ bool Grid::move(Colour colour, int fromR, int fromC, int toR, int toC) {
     this->setPiece(toR, toC, oldPiece);
     delete temp;
     this->td->update(*this);
+    this->gd->updateGrid(*this);
     return true;
 }
 
@@ -127,12 +130,17 @@ Colour Grid::check(Piece* piece, Pos pos) {
 
 // return if the current board has a check
 Colour Grid::check() {
+    cout << "A" << endl;
     Pos blackKingPos = this->findPiece(Type::King, Colour::Black)->getPos();
     Pos whiteKingPos = this->findPiece(Type::King, Colour::White)->getPos();
 
+    cout << "B" << endl;
     for (auto p : this->white) {
+         cout << "C" << endl;
         vector<Pos> allPossibleMoves = p->getValidMoves(*this);
+        cout << "D" << endl;
         if (Utils::posInVector(allPossibleMoves, blackKingPos)) {
+            cout << "E" << endl;
             return Colour::Black;
         }
     }
@@ -185,6 +193,7 @@ bool Grid::setPiece(Colour colour, int r, int c, Type type) {
     } else {
         delete oldPiece;
         this->td->update(*this);
+        this->gd->updateGrid(*this);
         return true;
     }
 }
@@ -235,6 +244,7 @@ void Grid::removePiece(int r, int c) {
     Piece* piece = this->getPiece(r, c);
     this->removePiece(piece);
     this->td->update(*this);
+    this->gd->updateGrid(*this);
     delete piece;
 }
 
@@ -260,6 +270,9 @@ Grid::~Grid() {
 
     // free text display
     delete this->td;
+
+    // free graph display
+    delete this->gd;
 }
 
 void computerBestMove(Colour colour, int level) {
