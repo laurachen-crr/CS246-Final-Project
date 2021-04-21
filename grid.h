@@ -23,16 +23,17 @@ class Grid : public Subject, public Observer {
     Grid();
     ~Grid();
     void init();
-    bool move(Colour colour, int fromR, int fromC, int toR, int toC);  // move pieceName to toR, toC
-    void computerBestMove();
-    bool setPiece(Colour colour, int r, int c, Type type);
+    bool move(Colour colour, int fromR, int fromC, int toR, int toC, Type promotion = Type::NoType);  // move pieceName to toR, toC
+    void setPiece(Colour colour, int r, int c, Type type);
     void setPiece(int r, int c, Piece* newPiece);
     Piece* findPiece(Type type, Colour colour);
-    Colour check();        // check whether one side is checked
-    Colour check(Piece* piece, Pos pos);
+    bool check(Colour colour, bool check = false);      // check whether side colour is checked
+    bool check(Piece* piece, Pos pos);
+    bool validateSetup();
+    vector<Piece *>& getPieces(Colour colour);
     void removePiece(Piece* piece);
     void removePiece(int r, int c);
-    Result checkmate();  // check whether the game is over
+    Result checkmate();     // check whether the game is over
     friend std::ostream &operator<<(std::ostream &out, const Grid &g);
     void notify(Subject &whoFrom) override;
     // piece: rnbqkpRNBQKP

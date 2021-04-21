@@ -3,21 +3,16 @@
 #include <vector>
 using namespace std;
 
+Colour Utils::opponent(Colour colour) {
+    return colour == Colour::White ? Colour::Black : Colour::White;
+}
+
 bool Utils::onBoard(int r, int c) {
     if (r < 8 && r >= 0 && c < 8 && c >=0) {
         return true;
     } else {
         return false;
     }
-}
-
-bool Utils::posInVector(vector<Pos>& v, Pos pos) {
-    for (auto p : v) {
-        if (p.row == pos.row && p.col == pos.col) {
-            return true;
-        }
-    }
-    return false;
 }
 
 char Utils::pieceToChar(Piece* piece) {
@@ -76,8 +71,11 @@ Type Utils::charToType(char c) {
         case 'b':
         case 'B':
             return Type::Bishop;
-        default:
+        case 'n':
+        case 'N':
             return Type::Knight;
+        default:
+            return Type::NoType;
     }
 }
 
