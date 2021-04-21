@@ -140,6 +140,7 @@ int main(int nargs, char* args[]) {
                                     blackScore += 1;
                                     cout << "White Resigned! Black Wins!"
                                          << endl;
+                                    delete computer;
                                     break;
                                 } else {
                                     throw InvalidCommand("Invalid command!");
@@ -173,6 +174,7 @@ int main(int nargs, char* args[]) {
                                     whiteScore += 1;
                                     cout << "Black resigned! White Wins!"
                                          << endl;
+                                    delete computer;
                                     break;
                                 } else {
                                     throw InvalidCommand("Invalid command!");
@@ -186,21 +188,25 @@ int main(int nargs, char* args[]) {
                                 cout << g << endl;
                             }
                         }
-
-                        if (g.checkmate() == Result::WhiteWin) {
-                            whiteScore += 1;
-                            cout << "Checkmate! White Wins!" << endl;
-                            break;
-                        } else if (g.checkmate() == Result::BlackWin) {
-                            blackScore += 1;
-                            cout << "Checkmate! Black Wins!" << endl;
-                            break;
-                        } else if (g.checkmate() == Result::Stalemate) {
-                            blackScore += 0.5;
-                            whiteScore += 0.5;
-                            cout << "Stalemate!" << endl;
-                            break;
+                        Result result = g.checkmate();
+                        if(!(result == Result::InGame)) {
+                            delete computer;
+                            if (result == Result::WhiteWin) {
+                                whiteScore += 1;
+                                cout << "Checkmate! White Wins!" << endl;
+                                break;
+                            } else if (result == Result::BlackWin) {
+                                blackScore += 1;
+                                cout << "Checkmate! Black Wins!" << endl;
+                                break;
+                            } else if (result == Result::Stalemate) {
+                                blackScore += 0.5;
+                                whiteScore += 0.5;
+                                cout << "Stalemate!" << endl;
+                                break;
+                            }
                         }
+                        
                         whoseMove = whoseMove == Colour::Black ? Colour::White
                                                                : Colour::Black;
                     } catch (InvalidCommand e) {

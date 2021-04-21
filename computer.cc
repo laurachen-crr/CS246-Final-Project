@@ -158,3 +158,10 @@ pair<Pos, Pos> Computer3::getNextMove(Grid& g, Colour colour) {
     return allMoves.at(index);
 }
 
+Computer::~Computer() {}
+
+Computer1::~Computer1() {}
+
+Computer2::~Computer2() {}
+
+Computer3::~Computer3() {}

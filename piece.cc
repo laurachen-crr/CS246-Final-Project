@@ -325,6 +325,7 @@ vector<Pos> Bishop::getValidMoves(Grid& g, bool check) {
 vector<Pos> Pawn::getValidMoves(Grid& g, bool check) {
     int row = this->getPos().row;
     int col = this->getPos().col;
+    Colour colour = this->getColour();
     vector<Pos> allValidMoves;
 
     if (this->getColour() == Colour::White) {
@@ -415,6 +416,7 @@ vector<Pos> Pawn::getValidMoves(Grid& g, bool check) {
 vector<Pos> Knight::getValidMoves(Grid& g, bool check) {
     int row = this->getPos().row;
     int col = this->getPos().col;
+    Colour colour = this->getColour();
     vector<Pos> allValidMoves;
 
     if (Utils::onBoard(row + 2, col + 1)) {
