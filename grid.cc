@@ -48,6 +48,7 @@ Grid::Grid() {
         Piece::createPiece(0, 7, Colour::White, Type::Rook));
 
     this->td = new TextDisplay{};
+    this->gd = new GraphicsDisplay{};
 }
 
 void Grid::init() {
@@ -64,8 +65,9 @@ void Grid::init() {
         this->grid.at(6).at(i).setPiece(this->white.at(i));
         this->grid.at(7).at(i).setPiece(this->white.at(i + 8));
     }
-    // update textdisplay
+    // update textdisplay and graphic display
     this->td->update(*this);
+    this->gd->updateGrid(*this);
 
     // attach observers(all pieces) to the grid
     for (int i = 0; i < 16; ++i) {
@@ -142,6 +144,7 @@ bool Grid::move(Colour colour, int fromR, int fromC, int toR, int toC, Type prom
     }
 
     this->td->update(*this);
+    this->gd->updateGrid(*this);
     return true;
 }
 
@@ -214,6 +217,7 @@ void Grid::setPiece(Colour colour, int r, int c, Type type) {
     this->setPiece(r, c, newPiece);
     delete oldPiece;
     this->td->update(*this);
+    this->gd->updateGrid(*this);
 }
 
 // determines if setup is valid
@@ -293,6 +297,7 @@ void Grid::removePiece(int r, int c) {
     this->removePiece(piece);
     delete piece;
     this->td->update(*this);
+    this->gd->updateGrid(*this);
 }
 
 // return array of pieces based on colour
@@ -371,5 +376,8 @@ Grid::~Grid() {
 
     // free text display
     delete this->td;
+
+    // free graph display
+    delete this->gd;
 }
 
