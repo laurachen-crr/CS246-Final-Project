@@ -14,7 +14,16 @@ class Utils {
     static char pieceToChar(Piece* piece);
     static Type charToType(char c);
     static Colour charToColour(char c);
-    static bool posInVector(vector<Pos>& v, Pos pos);
+
+    template<typename T>
+    static bool inVector(vector<T>& v, T value) {
+        for (auto val : v) {
+            if (val == value) {
+                return true;
+            }
+        }
+        return false;
+    }
 };
 
 #endif

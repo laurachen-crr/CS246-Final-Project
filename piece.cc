@@ -1,7 +1,5 @@
 #include "piece.h"
-
 #include <vector>
-
 #include "grid.h"
 #include "utils.h"
 using namespace std;
@@ -79,37 +77,37 @@ Knight::Knight(int row, int col, Colour colour)
 bool King::checkValidMove(int r, int c, Grid& g) {
     Pos destination = {r, c};
     vector<Pos> allValidMoves = this->getValidMoves(g);
-    return Utils::posInVector(allValidMoves, destination);
+    return Utils::inVector(allValidMoves, destination);
 }
 
 bool Queen::checkValidMove(int r, int c, Grid& g) {
     Pos destination = {r, c};
     vector<Pos> allValidMoves = this->getValidMoves(g);
-    return Utils::posInVector(allValidMoves, destination);
+    return Utils::inVector(allValidMoves, destination);
 }
 
 bool Bishop::checkValidMove(int r, int c, Grid& g) {
     Pos destination = {r, c};
     vector<Pos> allValidMoves = this->getValidMoves(g);
-    return Utils::posInVector(allValidMoves, destination);
+    return Utils::inVector(allValidMoves, destination);
 }
 
 bool Pawn::checkValidMove(int r, int c, Grid& g) {
     Pos destination = {r, c};
     vector<Pos> allValidMoves = this->getValidMoves(g);
-    return Utils::posInVector(allValidMoves, destination);
+    return Utils::inVector(allValidMoves, destination);
 }
 
 bool Rook::checkValidMove(int r, int c, Grid& g) {
     Pos destination = {r, c};
     vector<Pos> allValidMoves = this->getValidMoves(g);
-    return Utils::posInVector(allValidMoves, destination);
+    return Utils::inVector(allValidMoves, destination);
 }
 
 bool Knight::checkValidMove(int r, int c, Grid& g) {
     Pos destination = {r, c};
     vector<Pos> allValidMoves = this->getValidMoves(g);
-    return Utils::posInVector(allValidMoves, destination);
+    return Utils::inVector(allValidMoves, destination);
 }
 
 vector<Pos> King::getValidMoves(Grid& g, bool check) {
@@ -361,7 +359,7 @@ vector<Pos> Pawn::getValidMoves(Grid& g, bool check) {
             }
 
             if (row == 6) {
-                if (g.getPiece(4, col) == nullptr) {
+                if (g.getPiece(4, col) == nullptr && g.getPiece(5, col) == nullptr) {
                     Pos pos = {4, col};
                     if (!check || !g.check(this, pos)) {
                         allValidMoves.push_back(pos);
@@ -401,7 +399,7 @@ vector<Pos> Pawn::getValidMoves(Grid& g, bool check) {
             }
 
             if (row == 1) {
-                if (g.getPiece(3, col) == nullptr) {
+                if (g.getPiece(3, col) == nullptr && g.getPiece(2, col) == nullptr) {
                     Pos pos = {3, col};
                     if (!check || !g.check(this, pos)) {
                         allValidMoves.push_back(pos);

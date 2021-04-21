@@ -15,15 +15,6 @@ bool Utils::onBoard(int r, int c) {
     }
 }
 
-bool Utils::posInVector(vector<Pos>& v, Pos pos) {
-    for (auto p : v) {
-        if (p == pos) {
-            return true;
-        }
-    }
-    return false;
-}
-
 char Utils::pieceToChar(Piece* piece) {
     if (piece == nullptr) {
         return 'x';
@@ -80,8 +71,11 @@ Type Utils::charToType(char c) {
         case 'b':
         case 'B':
             return Type::Bishop;
-        default:
+        case 'n':
+        case 'N':
             return Type::Knight;
+        default:
+            return Type::NoType;
     }
 }
 

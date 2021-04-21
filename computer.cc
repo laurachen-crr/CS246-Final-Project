@@ -13,10 +13,8 @@ Computer* Computer::createComputer(int level) {
     switch(level) {
         case 1:
             return new Computer1{};
-            break;
         case 2:
             return new Computer2{};
-            break;
         default:
             return new Computer3{};
     }
@@ -61,7 +59,7 @@ pair<Pos, Pos> Computer2::getNextMove(Grid& g, Colour colour) {
         for (auto pos : moves) {
 
             // capture
-            if (Utils::posInVector(opponentLocation, pos)) {
+            if (Utils::inVector(opponentLocation, pos)) {
                 pair<Pos, Pos> p{piece->getPos(), pos};
                 allMoves.emplace_back(p);
                 size++;
@@ -116,11 +114,11 @@ pair<Pos, Pos> Computer3::getNextMove(Grid& g, Colour colour) {
     Piece* king = g.findPiece(Type::King, Utils::opponent(colour));
     for (auto piece : pieces) {
         vector<Pos> moves = piece->getValidMoves(g);
-        bool avoid = Utils::posInVector(opponentMoves, piece->getPos());
+        bool avoid = Utils::inVector(opponentMoves, piece->getPos());
         for (auto pos : moves) {
 
             // capture
-            if (Utils::posInVector(opponentLocation, pos)) {
+            if (Utils::inVector(opponentLocation, pos)) {
                 pair<Pos, Pos> p{piece->getPos(), pos};
                 allMoves.emplace_back(p);
                 size++;
@@ -134,7 +132,7 @@ pair<Pos, Pos> Computer3::getNextMove(Grid& g, Colour colour) {
             }
 
             // avoid
-            if (avoid && Utils::posInVector(opponentMoves, pos)) {
+            if (avoid && Utils::inVector(opponentMoves, pos)) {
                 pair<Pos, Pos> p{piece->getPos(), pos};
                 allMoves.emplace_back(p);
                 size++;

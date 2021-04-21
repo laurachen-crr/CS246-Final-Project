@@ -23,7 +23,7 @@ class Grid : public Subject, public Observer {
     Grid();
     ~Grid();
     void init();
-    bool move(Colour colour, int fromR, int fromC, int toR, int toC);  // move pieceName to toR, toC
+    bool move(Colour colour, int fromR, int fromC, int toR, int toC, Type promotion = Type::NoType);  // move pieceName to toR, toC
     void setPiece(Colour colour, int r, int c, Type type);
     void setPiece(int r, int c, Piece* newPiece);
     Piece* findPiece(Type type, Colour colour);

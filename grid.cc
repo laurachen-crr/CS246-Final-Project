@@ -91,9 +91,14 @@ std::ostream& operator<<(std::ostream& out, const Grid& g) {
     return out;
 }
 
-bool Grid::move(Colour colour, int fromR, int fromC, int toR, int toC) {
-    cout << "move to: " << toR << " : " << toC << endl;
+// main move command
+bool Grid::move(Colour colour, int fromR, int fromC, int toR, int toC, Type promotion) {
+    // positions must be on the board
+    if (!Utils::onBoard(fromR, fromC) || !Utils::onBoard(toR, toC)) {
+        return false;
+    }
     Piece* oldPiece = this->getPiece(fromR, fromC);
+
     // piece that user specified doesn't exist
     if (oldPiece == nullptr) {
         return false;
@@ -105,19 +110,37 @@ bool Grid::move(Colour colour, int fromR, int fromC, int toR, int toC) {
         return false;
     }
 
-    // Check for valid move
+    // check for valid move
     if (!(oldPiece->checkValidMove(toR, toC, *this))) {
         return false;
     }
 
-    // Check for checkmate
+    // promotion validation
+    if (oldPiece->getType() == Type::Pawn) {
+        if (pieceColour == Colour::Black && toR == 7) {
+            if (promotion == Type::NoType || promotion == Type::Pawn || promotion == Type::King) {
+                return false;
+            }
+        } else if (pieceColour == Colour::White && toR == 0) {
+            if (promotion == Type::NoType || promotion == Type::Pawn || promotion == Type::King) {
+                return false;
+            }
+        }
+    } else if (promotion != Type::NoType) {
+        return false;
+    }
 
     Piece* temp = this->getPiece(toR, toC);
 
     // set piece at new location
-    this->removePiece(oldPiece);
     this->setPiece(toR, toC, oldPiece);
     delete temp;
+
+    // promote if needed
+    if (promotion != Type::NoType) {
+        this->setPiece(pieceColour, toR, toC, promotion);
+    }
+
     this->td->update(*this);
     return true;
 }
@@ -135,16 +158,14 @@ bool Grid::check(Piece* piece, Pos pos) {
         Cell& curCell = this->getCell(pos.row, pos.col);
 
         // move new piece to pos
-        this->removePiece(curPiece);
-        curCell.setPiece(piece);
+        this->setPiece(pos.row, pos.col, piece);
 
         // see if in check after move
         inCheck = this->check(colour, false);
 
         // put old and new piece back
-        curCell.removePiece();
         this->setPiece(pos.row, pos.col, curPiece);
-        pieceCell.setPiece(piece);
+        this->setPiece(piecePos.row, piecePos.col, piece);
     }
     return inCheck;
 }
@@ -159,7 +180,7 @@ bool Grid::check(Colour colour, bool check) {
 
     for (auto piece : pieces) {
         vector<Pos> moves = piece->getValidMoves(*this, check);
-        if (Utils::posInVector(moves, king->getPos())) {
+        if (Utils::inVector(moves, king->getPos())) {
             return true;
         }
     }
@@ -174,18 +195,17 @@ bool Grid::check(Colour colour, bool check) {
 void Grid::setPiece(int r, int c, Piece* newPiece) {
     Piece* oldPiece = this->getPiece(r, c);
     this->removePiece(oldPiece);
+    this->removePiece(newPiece);
     this->getCell(r, c).setPiece(newPiece);
     if (newPiece != nullptr) {
-        Colour colour = newPiece->getColour();
-        if (colour == Colour::White) {
-            this->white.emplace_back(newPiece);
-        } else {
-            this->black.emplace_back(newPiece);
+        vector<Piece*>& pieces = this->getPieces(newPiece->getColour());
+        if (!Utils::inVector(pieces, newPiece)) {
+            pieces.emplace_back(newPiece);
         }
     }
 }
 
-// creates new piece at (r, c)
+// creates new piece at (r, c) and replace old piece
 // this method cleans up memory and validates
 // ONLY use this for setup mode!!
 void Grid::setPiece(Colour colour, int r, int c, Type type) {
