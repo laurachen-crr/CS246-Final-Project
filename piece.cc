@@ -27,6 +27,8 @@ Piece::Piece(int row, int col, Colour colour, Type type) {
     this->type = type;
 }
 
+Piece::~Piece() {};
+
 // factory method pattern
 // use this instead of Piece subclass constructors
 Piece* Piece::createPiece(int row, int col, Colour colour, Type type) {
@@ -325,7 +327,6 @@ vector<Pos> Bishop::getValidMoves(Grid& g, bool check) {
 vector<Pos> Pawn::getValidMoves(Grid& g, bool check) {
     int row = this->getPos().row;
     int col = this->getPos().col;
-    Colour colour = this->getColour();
     vector<Pos> allValidMoves;
 
     if (this->getColour() == Colour::White) {
@@ -416,7 +417,6 @@ vector<Pos> Pawn::getValidMoves(Grid& g, bool check) {
 vector<Pos> Knight::getValidMoves(Grid& g, bool check) {
     int row = this->getPos().row;
     int col = this->getPos().col;
-    Colour colour = this->getColour();
     vector<Pos> allValidMoves;
 
     if (Utils::onBoard(row + 2, col + 1)) {
@@ -526,7 +526,3 @@ void Piece::MovePiece(int r, int c) {
     this->pos.col = c;
 }
 
-void Piece::notify(Subject& whoFrom) {
-    // downcast from subject to a grid (whoFrom MUST be class Grid)
-    Grid& grid = static_cast<Grid&>(whoFrom);
-}

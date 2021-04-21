@@ -159,9 +159,3 @@ pair<Pos, Pos> Computer3::getNextMove(Grid& g, Colour colour) {
 }
 
 Computer::~Computer() {}
-
-Computer1::~Computer1() {}
-
-Computer2::~Computer2() {}
-
-Computer3::~Computer3() {}

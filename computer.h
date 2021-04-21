@@ -10,26 +10,23 @@ class Grid;
 class Computer {
     public:
     virtual pair<Pos, Pos> getNextMove(Grid& g, Colour colour) = 0;
-    virtual ~Computer() = 0;
+    virtual ~Computer();
     static Computer* createComputer(int level);
 };
 
 class Computer1 : public Computer {
     public:
     pair<Pos, Pos> getNextMove(Grid& g, Colour colour) override;
-    ~Computer1();
 };
 
 class Computer2 : public Computer {
     public:
     pair<Pos, Pos> getNextMove(Grid& g, Colour colour) override;
-    ~Computer2();
 };
 
 class Computer3 : public Computer {
     public:
     pair<Pos, Pos> getNextMove(Grid& g, Colour colour) override;
-    ~Computer3();
 };
 
 #endif

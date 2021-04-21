@@ -139,7 +139,7 @@ void GraphicsDisplay::drawGrid(Grid& g) {
   }
 }
 
-void GraphicsDisplay::updateGrid(Grid& g) {
+void GraphicsDisplay::update(Grid& g) {
   for (int i = 0; i < 8; i++ ) {
     for (int j = 0; j < 8; j++) {
       char pieceChar = Utils::pieceToChar(g.getPiece(i, j));

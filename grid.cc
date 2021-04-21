@@ -6,80 +6,90 @@
 #include "utils.h"
 
 Grid::Grid() {
-    for (int i = 0; i < 8; ++i) {
-        this->white.emplace_back(
-            Piece::createPiece(1, i, Colour::White, Type::Pawn));
-        this->black.emplace_back(
-            Piece::createPiece(6, i, Colour::Black, Type::Pawn));
-    }
-
-    this->black.emplace_back(
-        Piece::createPiece(7, 0, Colour::Black, Type::Rook));
-    this->black.emplace_back(
-        Piece::createPiece(7, 1, Colour::Black, Type::Knight));
-    this->black.emplace_back(
-        Piece::createPiece(7, 2, Colour::Black, Type::Bishop));
-    this->black.emplace_back(
-        Piece::createPiece(7, 3, Colour::Black, Type::Queen));
-    this->black.emplace_back(
-        Piece::createPiece(7, 4, Colour::Black, Type::King));
-    this->black.emplace_back(
-        Piece::createPiece(7, 5, Colour::Black, Type::Bishop));
-    this->black.emplace_back(
-        Piece::createPiece(7, 6, Colour::Black, Type::Knight));
-    this->black.emplace_back(
-        Piece::createPiece(7, 7, Colour::Black, Type::Rook));
-
-    this->white.emplace_back(
-        Piece::createPiece(0, 0, Colour::White, Type::Rook));
-    this->white.emplace_back(
-        Piece::createPiece(0, 1, Colour::White, Type::Knight));
-    this->white.emplace_back(
-        Piece::createPiece(0, 2, Colour::White, Type::Bishop));
-    this->white.emplace_back(
-        Piece::createPiece(0, 3, Colour::White, Type::Queen));
-    this->white.emplace_back(
-        Piece::createPiece(0, 4, Colour::White, Type::King));
-    this->white.emplace_back(
-        Piece::createPiece(0, 5, Colour::White, Type::Bishop));
-    this->white.emplace_back(
-        Piece::createPiece(0, 6, Colour::White, Type::Knight));
-    this->white.emplace_back(
-        Piece::createPiece(0, 7, Colour::White, Type::Rook));
-
     this->td = new TextDisplay{};
     this->gd = new GraphicsDisplay{};
 }
 
-void Grid::init() {
+void Grid::init(bool empty) {
+    // reset pieces
+    for (auto piece : this->white) {
+        delete piece;
+    }
+
+    for (auto piece : this->black) {
+        delete piece;
+    }
+
+    this->white.clear();
+    this->black.clear();
+
+    // create all pieces
+    if (!empty) {
+        for (int i = 0; i < 8; ++i) {
+            this->white.emplace_back(
+                Piece::createPiece(1, i, Colour::White, Type::Pawn));
+            this->black.emplace_back(
+                Piece::createPiece(6, i, Colour::Black, Type::Pawn));
+        }
+
+        this->black.emplace_back(
+            Piece::createPiece(7, 0, Colour::Black, Type::Rook));
+        this->black.emplace_back(
+            Piece::createPiece(7, 1, Colour::Black, Type::Knight));
+        this->black.emplace_back(
+            Piece::createPiece(7, 2, Colour::Black, Type::Bishop));
+        this->black.emplace_back(
+            Piece::createPiece(7, 3, Colour::Black, Type::Queen));
+        this->black.emplace_back(
+            Piece::createPiece(7, 4, Colour::Black, Type::King));
+        this->black.emplace_back(
+            Piece::createPiece(7, 5, Colour::Black, Type::Bishop));
+        this->black.emplace_back(
+            Piece::createPiece(7, 6, Colour::Black, Type::Knight));
+        this->black.emplace_back(
+            Piece::createPiece(7, 7, Colour::Black, Type::Rook));
+
+        this->white.emplace_back(
+            Piece::createPiece(0, 0, Colour::White, Type::Rook));
+        this->white.emplace_back(
+            Piece::createPiece(0, 1, Colour::White, Type::Knight));
+        this->white.emplace_back(
+            Piece::createPiece(0, 2, Colour::White, Type::Bishop));
+        this->white.emplace_back(
+            Piece::createPiece(0, 3, Colour::White, Type::Queen));
+        this->white.emplace_back(
+            Piece::createPiece(0, 4, Colour::White, Type::King));
+        this->white.emplace_back(
+            Piece::createPiece(0, 5, Colour::White, Type::Bishop));
+        this->white.emplace_back(
+            Piece::createPiece(0, 6, Colour::White, Type::Knight));
+        this->white.emplace_back(
+            Piece::createPiece(0, 7, Colour::White, Type::Rook));
+    }
+
+    // reset board
+    this->grid.clear();
+
     for (int i = 0; i < 8; ++i) {
         this->grid.emplace_back(vector<Cell>{});
         for (int j = 0; j < 8; ++j) {
             this->grid.at(i).emplace_back(Cell{i, j});
         }
     }
+
     // init all the pieces
-    for (int i = 0; i < 8; ++i) {
-        this->grid.at(0).at(i).setPiece(this->black.at(i + 8));
-        this->grid.at(1).at(i).setPiece(this->black.at(i));
-        this->grid.at(6).at(i).setPiece(this->white.at(i));
-        this->grid.at(7).at(i).setPiece(this->white.at(i + 8));
+    if (!empty) {
+        for (int i = 0; i < 8; ++i) {
+            this->grid.at(0).at(i).setPiece(this->black.at(i + 8));
+            this->grid.at(1).at(i).setPiece(this->black.at(i));
+            this->grid.at(6).at(i).setPiece(this->white.at(i));
+            this->grid.at(7).at(i).setPiece(this->white.at(i + 8));
+        }
     }
-    // update textdisplay and graphic display
+
+    // update
     this->td->update(*this);
-    this->gd->updateGrid(*this);
-
-    // attach observers(all pieces) to the grid
-    for (int i = 0; i < 16; ++i) {
-        this->attach(this->black.at(i));
-        this->attach(this->black.at(i));
-    }
-
-    // attach grid to pieces as observer
-    for (int i = 0; i < 16; ++i) {
-        this->black.at(i)->attach(this);
-        this->white.at(i)->attach(this);
-    }
+    this->gd->update(*this);
 }
 
 // get piece at (r, c)
@@ -143,8 +153,10 @@ bool Grid::move(Colour colour, int fromR, int fromC, int toR, int toC, Type prom
         this->setPiece(pieceColour, toR, toC, promotion);
     }
 
+    // update
     this->td->update(*this);
-    this->gd->updateGrid(*this);
+    this->gd->update(*this);
+
     return true;
 }
 
@@ -153,12 +165,11 @@ bool Grid::check(Piece* piece, Pos pos) {
     Pos piecePos = piece->getPos();
     Colour colour = piece->getColour();
     bool inCheck;
-    Cell& pieceCell = this->getCell(piecePos.row, piecePos.col);
+
     if (piecePos == pos) {
         inCheck = this->check(colour, false);
     } else {
         Piece* curPiece = this->getPiece(pos.row, pos.col);
-        Cell& curCell = this->getCell(pos.row, pos.col);
 
         // move new piece to pos
         this->setPiece(pos.row, pos.col, piece);
@@ -210,14 +221,11 @@ void Grid::setPiece(int r, int c, Piece* newPiece) {
 
 // creates new piece at (r, c) and replace old piece
 // this method cleans up memory and validates
-// ONLY use this for setup mode!!
 void Grid::setPiece(Colour colour, int r, int c, Type type) {
     Piece* oldPiece = this->getPiece(r, c);
     Piece* newPiece = Piece::createPiece(r, c, colour, type);
     this->setPiece(r, c, newPiece);
     delete oldPiece;
-    this->td->update(*this);
-    this->gd->updateGrid(*this);
 }
 
 // determines if setup is valid
@@ -290,14 +298,28 @@ void Grid::removePiece(Piece* piece) {
     }
 }
 
+// for setup mode
+void Grid::setupSetPiece(Colour colour, int r, int c, Type type) {
+    this->setPiece(colour, r, c, type);
+    // update
+    this->td->update(*this);
+    this->gd->update(*this);
+}
+
+// for setup mode
+void Grid::setupRemovePiece(int r, int c) {
+    this->removePiece(r, c);
+    // update
+    this->td->update(*this);
+    this->gd->update(*this);
+}
+
 // remove piece at (r, c) from grid
 // this method does clean up memory
 void Grid::removePiece(int r, int c) {
     Piece* piece = this->getPiece(r, c);
     this->removePiece(piece);
     delete piece;
-    this->td->update(*this);
-    this->gd->updateGrid(*this);
 }
 
 // return array of pieces based on colour
@@ -311,14 +333,11 @@ vector<Piece*>& Grid::getPieces(Colour colour) {
 
 // return the state of the game
 Result Grid::checkmate() {
-    Piece* king;
-    Colour colour;
+    Colour colour; // colour that is in check right now
     if (this->check(Colour::White)) {
         colour = Colour::White;
-        king = this->findPiece(Type::King, Colour::White);
     } else if (this->check(Colour::Black)) {
         colour = Colour::Black;
-        king = this->findPiece(Type::King, Colour::Black);
     } else {
         // check if stalemate
         for (auto piece : this->black) {
@@ -339,7 +358,7 @@ Result Grid::checkmate() {
     }
 
     // check if there's any move that can avoid check (ie. try all moves)
-    vector<Piece*>& pieces = this->getPieces(Utils::opponent(colour));
+    vector<Piece*>& pieces = this->getPieces(colour);
 
     for (auto piece : pieces) {
         vector<Pos> moves = piece->getValidMoves(*this);
@@ -356,11 +375,6 @@ Result Grid::checkmate() {
     } else {
         return Result::WhiteWin;
     }
-}
-
-void Grid::notify(Subject& whoFrom) {
-    // downcast from subject to a piece (whoFrom MUST be class Piece)
-    Piece& piece = static_cast<Piece&>(whoFrom);
 }
 
 Grid::~Grid() {

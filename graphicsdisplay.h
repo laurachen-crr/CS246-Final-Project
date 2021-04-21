@@ -4,8 +4,6 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include "observer.h"
-#include "subject.h"
 
 using namespace std;
 
@@ -39,7 +37,7 @@ class GraphicsDisplay {
   void drawGrid(Grid& g);
 
   // Update the grid
-  void updateGrid(Grid& g);
+  void update(Grid& g);
 
 };
 
