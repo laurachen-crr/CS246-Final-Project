@@ -9,14 +9,12 @@
 #include "exception.h"
 #include "grid.h"
 #include "observer.h"
-#include "subject.h"
 #include "utils.h"
 
 using namespace std;
 
 int main(int nargs, char* args[]) {
     Grid g{};
-    g.init();
     Colour whoseMove = Colour::White;
     string command;
     char fromCol;
@@ -26,6 +24,7 @@ int main(int nargs, char* args[]) {
     string cmd;
     int seed = time(0);
     bool text = false;
+    bool setup = false;
     string residual;
     string validPieces = "rnbqkpRNBQKP";
     string whitePieces = "RNBQKP";
@@ -70,7 +69,9 @@ int main(int nargs, char* args[]) {
             if (command == "game") {  // play mode
                 string whiteplayer, blackplayer;
                 iss >> whiteplayer >> blackplayer;
-
+                if (!setup) {
+                    g.init();
+                }
                 int level = -1;
                 Computer* computer = nullptr;
                 if (whiteplayer.substr(0, whiteplayer.size() - 1) ==
@@ -99,7 +100,6 @@ int main(int nargs, char* args[]) {
                     srand(seed);
                     computer = Computer::createComputer(level);
                 }
-
                 cout << g << endl;
 
                 while (g.checkmate() == Result::InGame) {
@@ -147,7 +147,6 @@ int main(int nargs, char* args[]) {
                                 }
                             } else if (whiteplayer == "computer") {
                                 // make the computer move
-                                // g.computerBestMove(whoseMove, level);
                                 std::pair<Pos, Pos> move =
                                     computer->getNextMove(g, Colour::White);
                                 g.move(Colour::White, move.first.row,
@@ -213,7 +212,10 @@ int main(int nargs, char* args[]) {
                         cout << e.msg << endl;
                     }
                 }
+                setup = false;
             } else if (command == "setup") {  // set up mode
+                g.init(true);
+                setup = true;
                 cout << g << endl;
                 while (true) {
                     getline(cin, line);
@@ -232,7 +234,7 @@ int main(int nargs, char* args[]) {
                                        toRow < 1 || toRow > 8) {
                                 throw InvalidCommand("Invalid move!");
                             } else {
-                                g.setPiece(Utils::charToColour(pieceName),
+                                g.setupSetPiece(Utils::charToColour(pieceName),
                                            8 - toRow, toCol - 'a',
                                            Utils::charToType(pieceName));
                                 cout << g << endl;
@@ -244,7 +246,7 @@ int main(int nargs, char* args[]) {
                                 fromRow > 8) {
                                 throw InvalidCommand("Invalid move!");
                             } else {
-                                g.removePiece(8 - fromRow, fromCol - 'a');
+                                g.setupRemovePiece(8 - fromRow, fromCol - 'a');
                                 cout << g << endl;
                             }
                         } else if (cmd == "=") {

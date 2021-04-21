@@ -40,31 +40,6 @@ TextDisplay::TextDisplay() {
     this->emptyboard = this->theDisplay;
 }
 
-// void TextDisplay::init() {
-//     this->theDisplay.at(0).at(0) = 'R';
-//     this->theDisplay.at(0).at(1) = 'N';
-//     this->theDisplay.at(0).at(2) = 'B';
-//     this->theDisplay.at(0).at(3) = 'Q';
-//     this->theDisplay.at(0).at(4) = 'K';
-//     this->theDisplay.at(0).at(5) = 'B';
-//     this->theDisplay.at(0).at(6) = 'N';
-//     this->theDisplay.at(0).at(7) = 'R';
-
-//     this->theDisplay.at(7).at(0) = 'r';
-//     this->theDisplay.at(7).at(1) = 'n';
-//     this->theDisplay.at(7).at(2) = 'b';
-//     this->theDisplay.at(7).at(3) = 'q';
-//     this->theDisplay.at(7).at(4) = 'k';
-//     this->theDisplay.at(7).at(5) = 'b';
-//     this->theDisplay.at(7).at(6) = 'n';
-//     this->theDisplay.at(7).at(7) = 'r';
-
-//     for (int i = 0; i < 8; ++i) {
-//         this->theDisplay.at(1).at(i) = 'P';
-//         this->theDisplay.at(6).at(i) = 'p';
-//     }
-// }
-
 void TextDisplay::update(Grid &g) {
     for (int i = 0; i < 8; ++i) {
         for (int j = 0; j < 8; ++j) {

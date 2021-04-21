@@ -2,8 +2,6 @@
 #define TEXTDISPLAY_H
 #include <iostream>
 #include <vector>
-#include "observer.h"
-#include "subject.h"
 using namespace std;
 
 class Cell;
