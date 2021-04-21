@@ -5,9 +5,13 @@
 #include "textdisplay.h"
 #include "utils.h"
 
-Grid::Grid() {
+Grid::Grid(bool text) {
     this->td = new TextDisplay{};
-    this->gd = new GraphicsDisplay{};
+    if (text) {
+        this->gd = nullptr;
+    } else {
+        this->gd = new GraphicsDisplay{};
+    }
 }
 
 void Grid::init(bool empty) {
@@ -89,7 +93,9 @@ void Grid::init(bool empty) {
 
     // update
     this->td->update(*this);
-    this->gd->update(*this);
+    if (this->gd != nullptr) {
+        this->gd->update(*this);
+    }
 }
 
 // get piece at (r, c)
@@ -155,7 +161,9 @@ bool Grid::move(Colour colour, int fromR, int fromC, int toR, int toC, Type prom
 
     // update
     this->td->update(*this);
-    this->gd->update(*this);
+    if (this->gd != nullptr) {
+        this->gd->update(*this);
+    }
 
     return true;
 }
@@ -303,7 +311,9 @@ void Grid::setupSetPiece(Colour colour, int r, int c, Type type) {
     this->setPiece(colour, r, c, type);
     // update
     this->td->update(*this);
-    this->gd->update(*this);
+    if (this->gd != nullptr) {
+        this->gd->update(*this);
+    }
 }
 
 // for setup mode
@@ -311,7 +321,9 @@ void Grid::setupRemovePiece(int r, int c) {
     this->removePiece(r, c);
     // update
     this->td->update(*this);
-    this->gd->update(*this);
+    if (this->gd != nullptr) {
+        this->gd->update(*this);
+    }
 }
 
 // remove piece at (r, c) from grid

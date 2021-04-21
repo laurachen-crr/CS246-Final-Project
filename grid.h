@@ -20,7 +20,7 @@ class Grid {
     GraphicsDisplay *gd = nullptr; 
 
    public:
-    Grid();
+    Grid(bool text);
     ~Grid();
     void init(bool empty = false);
     void clear();
