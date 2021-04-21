@@ -8,13 +8,11 @@
 #include "computer.h"
 #include "exception.h"
 #include "grid.h"
-#include "observer.h"
 #include "utils.h"
 
 using namespace std;
 
 int main(int nargs, char* args[]) {
-    Grid g{};
     Colour whoseMove = Colour::White;
     string command;
     char fromCol;
@@ -61,7 +59,7 @@ int main(int nargs, char* args[]) {
         cout << e.msg << endl;
         return 1;
     }
-
+    Grid g{text};
     while (getline(cin, line)) {
         istringstream iss(line);
         try {
