@@ -500,11 +500,6 @@ vector<Pos> Knight::getValidMoves(Grid& g, bool check) {
             }
         }
     }
-    if(check) {
-        for(auto pos : allValidMoves) {
-            cout << pos.row << " : " << pos.col << endl;
-        }
-    }
     
     return allValidMoves;
 }
@@ -572,4 +567,3 @@ void Piece::MovePiece(int r, int c) {
     this->pos.row = r;
     this->pos.col = c;
 }
-

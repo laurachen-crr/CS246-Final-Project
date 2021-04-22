@@ -138,6 +138,7 @@ int main(int nargs, char* args[]) {
                                     blackScore += 1;
                                     cout << "White Resigned! Black Wins!"
                                          << endl;
+                                    g.getGraphicsDisplay()->drawString(150,225, "White Resigned! Black Wins!");
                                     delete computer;
                                     break;
                                 } else {
@@ -171,6 +172,7 @@ int main(int nargs, char* args[]) {
                                     whiteScore += 1;
                                     cout << "Black resigned! White Wins!"
                                          << endl;
+                                    g.getGraphicsDisplay()->drawString(150,225, "Black resigned! White Wins!");
                                     delete computer;
                                     break;
                                 } else {
@@ -186,26 +188,38 @@ int main(int nargs, char* args[]) {
                             }
                         }
                         Result result = g.checkmate();
-                        if(!(result == Result::InGame)) {
+                        if (result != Result::InGame) {
                             delete computer;
                             if (result == Result::WhiteWin) {
                                 whiteScore += 1;
                                 cout << "Checkmate! White Wins!" << endl;
+                                g.getGraphicsDisplay()->drawString(150,225, "Checkmate! White Wins!");
                                 break;
                             } else if (result == Result::BlackWin) {
                                 blackScore += 1;
                                 cout << "Checkmate! Black Wins!" << endl;
+                                g.getGraphicsDisplay()->drawString(150,225, "Checkmate! Black Wins!");
                                 break;
                             } else if (result == Result::Stalemate) {
                                 blackScore += 0.5;
                                 whiteScore += 0.5;
                                 cout << "Stalemate!" << endl;
+                                g.getGraphicsDisplay()->drawString(150,225, "Stalemate!");
                                 break;
+                            }
+                        } else {
+                            if (g.check(Utils::opponent(whoseMove))) {
+                                if (whoseMove == Colour::Black) {
+                                    cout << "White is in check!" << endl;
+                                    g.getGraphicsDisplay()->drawString(150,225, "White is in check!");
+                                } else {
+                                    cout << "Black is in check!" << endl;
+                                    g.getGraphicsDisplay()->drawString(150,225, "Black is in check!");
+                                }
                             }
                         }
                         
-                        whoseMove = whoseMove == Colour::Black ? Colour::White
-                                                               : Colour::Black;
+                        whoseMove = Utils::opponent(whoseMove);
                     } catch (InvalidCommand e) {
                         cout << e.msg << endl;
                     }
