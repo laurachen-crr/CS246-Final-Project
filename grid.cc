@@ -110,37 +110,58 @@ std::ostream& operator<<(std::ostream& out, const Grid& g) {
 }
 
 // main move command
-bool Grid::move(Colour colour, int fromR, int fromC, int toR, int toC, Type promotion) {
+bool Grid::move(Colour colour, int fromR, int fromC, int toR, int toC,
+                Type promotion) {
     // positions must be on the board
     if (!Utils::onBoard(fromR, fromC) || !Utils::onBoard(toR, toC)) {
         return false;
     }
-    Piece* oldPiece = this->getPiece(fromR, fromC);
+    Piece* fromPiece = this->getPiece(fromR, fromC);
+    Piece* toPiece = this->getPiece(toR, toC);
 
     // piece that user specified doesn't exist
-    if (oldPiece == nullptr) {
+    if (fromPiece == nullptr) {
         return false;
     }
 
     // piece must be same colour as the player
-    Colour pieceColour = oldPiece->getColour();
+    Colour pieceColour = fromPiece->getColour();
     if (pieceColour != colour) {
         return false;
     }
 
     // check for valid move
-    if (!(oldPiece->checkValidMove(toR, toC, *this))) {
-        return false;
+    if (!(fromPiece->checkValidMove(toR, toC, *this))) {
+        // check for castling
+        if (checkCastling(colour, fromR, fromC, toR, toC)) {
+            this->setPiece(toR, toC, fromPiece);
+            this->setPiece(fromR, fromC, toPiece);
+
+            // update
+            this->td->update(*this);
+            if (this->gd != nullptr) {
+                this->gd->update(*this);
+            }
+
+            this->lastMove = this->getPiece(toR, toC);
+            fromPiece->setPrev({fromR, fromC});
+            toPiece->setPrev({toR, toC});
+            return true;
+        } else {
+            return false;
+        }
     }
 
     // promotion validation
-    if (oldPiece->getType() == Type::Pawn) {
+    if (fromPiece->getType() == Type::Pawn) {
         if (pieceColour == Colour::Black && toR == 7) {
-            if (promotion == Type::NoType || promotion == Type::Pawn || promotion == Type::King) {
+            if (promotion == Type::NoType || promotion == Type::Pawn ||
+                promotion == Type::King) {
                 return false;
             }
         } else if (pieceColour == Colour::White && toR == 0) {
-            if (promotion == Type::NoType || promotion == Type::Pawn || promotion == Type::King) {
+            if (promotion == Type::NoType || promotion == Type::Pawn ||
+                promotion == Type::King) {
                 return false;
             }
         }
@@ -148,15 +169,14 @@ bool Grid::move(Colour colour, int fromR, int fromC, int toR, int toC, Type prom
         return false;
     }
 
-    Piece* temp = this->getPiece(toR, toC);
-
     // set piece at new location
-    this->setPiece(toR, toC, oldPiece);
-    delete temp;
+    this->setPiece(toR, toC, fromPiece);
+    delete toPiece;
 
     // promote if needed
     if (promotion != Type::NoType) {
         this->setPiece(pieceColour, toR, toC, promotion);
+        fromPiece = this->getPiece(toR, toC);
     }
 
     // update
@@ -165,8 +185,51 @@ bool Grid::move(Colour colour, int fromR, int fromC, int toR, int toC, Type prom
         this->gd->update(*this);
     }
 
+    this->lastMove = this->getPiece(toR, toC);
+    fromPiece->setPrev({fromR, fromC});
     return true;
 }
+
+bool Grid::checkCastling(Colour colour, int fromR, int fromC, int toR,
+                         int toC) {
+    Piece* fromPiece = this->getPiece(fromR, fromC);
+    Piece* toPiece = this->getPiece(toR, toC);
+    if (fromPiece == nullptr && toPiece == nullptr) {
+        return false;
+    }
+
+    if (fromPiece->getType() == Type::King &&
+        toPiece->getType() == Type::Rook &&
+        toPiece->getColour() == fromPiece->getColour() &&
+        fromPiece->getPrev() == Pos{-1, -1} &&
+        toPiece->getPrev() == Pos{-1, -1}) {
+        if (fromC < toC) {
+            if (this->getPiece(fromR, fromC + 1) == nullptr &&
+                this->getPiece(fromR, fromC + 2) == nullptr) {
+                if (!check(fromPiece, fromPiece->getPos()) &&
+                    !check(fromPiece, {fromR, fromC + 1}) &&
+                    !check(fromPiece, {fromR, fromC + 2}) &&
+                    !check(toPiece, toPiece->getPos())) {
+                    return true;
+                }
+            }
+        } else {
+            if (this->getPiece(fromR, fromC - 1) == nullptr &&
+                this->getPiece(fromR, fromC - 2) == nullptr &&
+                this->getPiece(fromR, fromC - 3) == nullptr) {
+                if (!check(fromPiece, fromPiece->getPos()) &&
+                    !check(fromPiece, {fromR, fromC - 1}) &&
+                    !check(fromPiece, {fromR, fromC - 2}) &&
+                    !check(fromPiece, {fromR, fromC - 3}) &&
+                    !check(toPiece, toPiece->getPos())) {
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}
+
 
 // check by moving piece to pos results in a check for yourself
 bool Grid::check(Piece* piece, Pos pos) {
@@ -243,7 +306,7 @@ bool Grid::validateSetup() {
         return false;
     }
 
-    // pawn on last/first row 
+    // pawn on last/first row
     int bKingCount = 0;
     for (auto piece : this->black) {
         int row = piece->getPos().row;
@@ -345,7 +408,7 @@ vector<Piece*>& Grid::getPieces(Colour colour) {
 
 // return the state of the game
 Result Grid::checkmate() {
-    Colour colour; // colour that is in check right now
+    Colour colour;  // colour that is in check right now
     if (this->check(Colour::White)) {
         colour = Colour::White;
     } else if (this->check(Colour::Black)) {
@@ -376,7 +439,7 @@ Result Grid::checkmate() {
         vector<Pos> moves = piece->getValidMoves(*this);
         for (auto pos : moves) {
             if (!this->check(piece, pos)) {
-                return Result::InGame; 
+                return Result::InGame;
             }
         }
     }
@@ -406,4 +469,3 @@ Grid::~Grid() {
     // free graph display
     delete this->gd;
 }
-
