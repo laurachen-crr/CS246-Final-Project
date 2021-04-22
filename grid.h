@@ -15,9 +15,11 @@ class Grid {
     std::vector<std::vector<Cell>> grid;
     std::vector<Piece *> black;
     std::vector<Piece *> white;
+    Piece* lastMove = nullptr;
 
     TextDisplay *td;  // The text display.
     GraphicsDisplay *gd = nullptr; 
+    bool checkCastling(Colour colour, int fromR, int fromC, int toR, int toC);
 
    public:
     Grid(bool text);

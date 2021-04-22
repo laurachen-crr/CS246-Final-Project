@@ -25,6 +25,7 @@ Piece::Piece(int row, int col, Colour colour, Type type) {
     this->pos = {row, col};
     this->colour = colour;
     this->type = type;
+    this->prev = {-1, -1};
 }
 
 Piece::~Piece() {};
@@ -411,6 +412,8 @@ vector<Pos> Pawn::getValidMoves(Grid& g, bool check) {
         }
     }
 
+
+
     return allValidMoves;
 }
 
@@ -566,4 +569,12 @@ vector<Pos> Rook::getValidMoves(Grid& g, bool check) {
 void Piece::MovePiece(int r, int c) {
     this->pos.row = r;
     this->pos.col = c;
+}
+
+void Piece::setPrev(Pos pos) {
+    this->prev = pos;
+}
+
+Pos Piece::getPrev() {
+    return this->prev;
 }
