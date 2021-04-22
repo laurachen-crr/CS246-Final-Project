@@ -211,6 +211,7 @@ int main(int nargs, char* args[]) {
                     }
                 }
                 setup = false;
+                whoseMove = Colour::White;
             } else if (command == "setup") {  // set up mode
                 g.init(true);
                 setup = true;
