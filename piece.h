@@ -11,6 +11,7 @@ class Piece {
     Type type;
     Pos pos;
     Colour colour;
+    Pos prev;
 
 public: 
     Piece(int row, int col, Colour colour, Type type);
@@ -19,6 +20,8 @@ public:
     Type getType();
     Colour getColour();
     Pos getPos();
+    Pos getPrev();
+    void setPrev(Pos pos);
     void setPos(int r, int c);
     void MovePiece(int r, int c); // Move a piece of given colour here.
     virtual bool checkValidMove(int r, int c, Grid& g) = 0; // check if move to r, c is a valid move
