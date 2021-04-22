@@ -152,4 +152,3 @@ void GraphicsDisplay::update(Grid& g) {
   }
   this->drawGrid(g);
 }
-

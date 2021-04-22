@@ -452,6 +452,10 @@ Result Grid::checkmate() {
     }
 }
 
+GraphicsDisplay* Grid::getGraphicsDisplay() {
+    return this->gd;
+}
+
 Grid::~Grid() {
     // free every piece in black vector
     for (auto piece : this->black) {

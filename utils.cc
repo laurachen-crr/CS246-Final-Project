@@ -86,4 +86,3 @@ Colour Utils::charToColour(char c) {
         return Colour::White;
     }
 }
-

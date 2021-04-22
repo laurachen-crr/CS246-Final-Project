@@ -42,6 +42,7 @@ class Grid {
     Cell& getCell(int r, int c);
     void setupSetPiece(Colour colour, int r, int c, Type type);
     void setupRemovePiece(int r, int c);
+    GraphicsDisplay* getGraphicsDisplay();
 };
 
 #endif

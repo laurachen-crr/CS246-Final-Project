@@ -503,11 +503,6 @@ vector<Pos> Knight::getValidMoves(Grid& g, bool check) {
             }
         }
     }
-    if(check) {
-        for(auto pos : allValidMoves) {
-            cout << pos.row << " : " << pos.col << endl;
-        }
-    }
     
     return allValidMoves;
 }
