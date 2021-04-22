@@ -194,6 +194,15 @@ bool Grid::checkCastling(Colour colour, int fromR, int fromC, int toR,
                          int toC) {
     Piece* fromPiece = this->getPiece(fromR, fromC);
     Piece* toPiece = this->getPiece(toR, toC);
+    if(colour == Colour::White) {
+        if(!(fromR == 7 && fromC == 4 && toR == 7 && (toC == 0 || toC == 7))) {
+            return false;
+        }
+    } else {
+        if(!(fromR == 0 && fromC == 4 && toR == 0 && (toC == 0 || toC == 7))) {
+            return false;
+        }
+    }
     if (fromPiece == nullptr && toPiece == nullptr) {
         return false;
     }
