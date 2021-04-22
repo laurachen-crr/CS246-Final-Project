@@ -458,6 +458,53 @@ vector<Pos> Knight::getValidMoves(Grid& g, bool check) {
             }
         }
     }
+
+    ////////////
+
+    if (Utils::onBoard(row + 1, col + 2)) {
+        if (!(g.getPiece(row + 1, col + 2) != nullptr &&
+              g.getPiece(row + 1, col + 2)->getColour() == this->getColour())) {
+            Pos pos = {row + 1, col + 2};
+            if (!check || !g.check(this, pos)) {
+                allValidMoves.push_back(pos);
+            }
+        }
+    } 
+    
+    if (Utils::onBoard(row - 1, col + 2)) {
+        if (!(g.getPiece(row - 1, col + 2) != nullptr &&
+              g.getPiece(row - 1, col + 2)->getColour() == this->getColour())) {
+            Pos pos = {row - 1, col + 2};
+            if (!check || !g.check(this, pos)) {
+                allValidMoves.push_back(pos);
+            }
+        }
+    } 
+    
+    if (Utils::onBoard(row + 1, col - 2)) {
+        if (!(g.getPiece(row + 1, col - 2) != nullptr &&
+              g.getPiece(row + 1, col - 2)->getColour() == this->getColour())) {
+            Pos pos = {row + 1, col - 2};
+            if (!check || !g.check(this, pos)) {
+                allValidMoves.push_back(pos);
+            }
+        }
+    } 
+    
+    if (Utils::onBoard(row - 1, col - 2)) {
+        if (!(g.getPiece(row - 1, col - 2) != nullptr &&
+              g.getPiece(row - 1, col - 2)->getColour() == this->getColour())) {
+            Pos pos = {row - 1, col - 2};
+            if (!check || !g.check(this, pos)) {
+                allValidMoves.push_back(pos);
+            }
+        }
+    }
+    if(check) {
+        for(auto pos : allValidMoves) {
+            cout << pos.row << " : " << pos.col << endl;
+        }
+    }
     
     return allValidMoves;
 }
